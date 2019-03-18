@@ -15,7 +15,7 @@ public class TestController {
     @ResponseBody
     public Map<String,Object> testMVC(){
         Map<String,Object> responseMap = new HashMap<>();
-        responseMap.put("name","martin");
+        responseMap.put("name","哈哈哈");
         return responseMap;
     }
 }
