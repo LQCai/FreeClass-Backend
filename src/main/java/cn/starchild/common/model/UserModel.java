@@ -1,7 +1,9 @@
 package cn.starchild.common.model;
 
+import javax.persistence.Table;
 import java.util.Date;
 
+@Table(name = "t_user")
 public class UserModel extends BaseModel {
 
     private static final long serialVersionUID = 5715947400419117755L;

@@ -2,6 +2,11 @@ package cn.starchild.common.model;
 
 import java.io.Serializable;
 
+/**
+ * 实体基类
+ *
+ * @author lqcai
+ */
 public class BaseModel implements Serializable {
     private static final long serialVersionUID = -459530011111182045L;
 

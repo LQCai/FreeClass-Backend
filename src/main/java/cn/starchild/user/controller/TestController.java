@@ -1,14 +1,12 @@
 package cn.starchild.user.controller;
 
-import cn.starchild.common.model.UserModel;
-import cn.starchild.common.service.CommonService;
-import cn.starchild.user.service.UserSrevice;
+import cn.starchild.common.utils.ResData;
+import cn.starchild.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,9 +16,7 @@ import java.util.Map;
 public class TestController {
 
     @Autowired
-    private UserSrevice userSrevice;
-    @Autowired
-    private CommonService commonService;
+    private UserService userService;
 
     @RequestMapping("/testMVC")
     @ResponseBody
@@ -35,7 +31,7 @@ public class TestController {
     public List<Map<String, Object>> testDb() {
 
         try {
-            return userSrevice.getAllUsers();
+            return userService.getAllUsers();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -44,8 +40,13 @@ public class TestController {
 
     @RequestMapping("/test")
     @ResponseBody
-    public <T extends Serializable> List<T> test() {
-        Class<T> clazz = null;
-        return  commonService.listAll(clazz);
+    public ResData getAll() {
+        return ResData.ok(userService.getAll());
+    }
+
+    @RequestMapping("/test2")
+    @ResponseBody
+    public ResData testError() {
+        return ResData.error("error");
     }
 }
