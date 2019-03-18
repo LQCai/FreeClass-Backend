@@ -1,11 +1,14 @@
 package cn.starchild.user.controller;
 
+import cn.starchild.common.model.UserModel;
+import cn.starchild.common.service.CommonService;
 import cn.starchild.user.service.UserSrevice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +19,8 @@ public class TestController {
 
     @Autowired
     private UserSrevice userSrevice;
+    @Autowired
+    private CommonService commonService;
 
     @RequestMapping("/testMVC")
     @ResponseBody
@@ -35,5 +40,12 @@ public class TestController {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @RequestMapping("/test")
+    @ResponseBody
+    public <T extends Serializable> List<T> test() {
+        Class<T> clazz = null;
+        return  commonService.listAll(clazz);
     }
 }
