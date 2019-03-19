@@ -2,18 +2,20 @@ package cn.starchild.common.model;
 
 import java.util.Date;
 
-public class UserModel {
+public class ClassModel {
     private String id;
 
     private String name;
 
-    private String serialCode;
+    private String teacherId;
 
-    private String openId;
+    private String invitationCode;
 
-    private String email;
+    private Boolean peopleMaximum;
 
     private Boolean status;
+
+    private Boolean topping;
 
     private Date created;
 
@@ -35,28 +37,28 @@ public class UserModel {
         this.name = name == null ? null : name.trim();
     }
 
-    public String getSerialCode() {
-        return serialCode;
+    public String getTeacherId() {
+        return teacherId;
     }
 
-    public void setSerialCode(String serialCode) {
-        this.serialCode = serialCode == null ? null : serialCode.trim();
+    public void setTeacherId(String teacherId) {
+        this.teacherId = teacherId == null ? null : teacherId.trim();
     }
 
-    public String getOpenId() {
-        return openId;
+    public String getInvitationCode() {
+        return invitationCode;
     }
 
-    public void setOpenId(String openId) {
-        this.openId = openId == null ? null : openId.trim();
+    public void setInvitationCode(String invitationCode) {
+        this.invitationCode = invitationCode == null ? null : invitationCode.trim();
     }
 
-    public String getEmail() {
-        return email;
+    public Boolean getPeopleMaximum() {
+        return peopleMaximum;
     }
 
-    public void setEmail(String email) {
-        this.email = email == null ? null : email.trim();
+    public void setPeopleMaximum(Boolean peopleMaximum) {
+        this.peopleMaximum = peopleMaximum;
     }
 
     public Boolean getStatus() {
@@ -65,6 +67,14 @@ public class UserModel {
 
     public void setStatus(Boolean status) {
         this.status = status;
+    }
+
+    public Boolean getTopping() {
+        return topping;
+    }
+
+    public void setTopping(Boolean topping) {
+        this.topping = topping;
     }
 
     public Date getCreated() {
