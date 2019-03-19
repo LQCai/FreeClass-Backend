@@ -1,4 +1,4 @@
-package cn.starchild.common.utils;
+package cn.starchild.common.domain;
 
 import java.util.HashMap;
 

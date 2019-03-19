@@ -1,6 +1,6 @@
 package cn.starchild.user.controller;
 
-import cn.starchild.common.utils.ResData;
+import cn.starchild.common.domain.ResData;
 import cn.starchild.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
