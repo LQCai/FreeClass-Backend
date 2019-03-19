@@ -1,7 +1,11 @@
 package cn.starchild.user.controller;
 
 import cn.starchild.common.domain.ResData;
+import cn.starchild.common.http.HttpResponse;
+import cn.starchild.common.http.HttpUtils;
 import cn.starchild.user.service.UserService;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,5 +52,14 @@ public class TestController {
     @ResponseBody
     public ResData testError() {
         return ResData.error("error");
+    }
+
+    @RequestMapping("/testGet")
+    @ResponseBody
+    public ResData test() {
+        HttpResponse data = HttpUtils.get("http://localhost:8080/freeClass/test/test", null);
+        Object jsonData = JSON.parse(data.getResultStr());
+
+        return  ResData.ok(jsonData);
     }
 }

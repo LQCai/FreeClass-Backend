@@ -1,6 +1,6 @@
 package cn.starchild.common.util;
 
-import com.xuan.mix.io.IOUtils;
+import cn.starchild.common.io.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
