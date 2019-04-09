@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.starchild.common.dao.ClassDao">
+  <resultMap id="BaseResultMap" type="cn.starchild.common.model.ClassModel">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="teacher_id" jdbcType="CHAR" property="teacherId" />
+    <result column="invitation_code" jdbcType="CHAR" property="invitationCode" />
+    <result column="people_maximum" jdbcType="BIT" property="peopleMaximum" />
+    <result column="status" jdbcType="BIT" property="status" />
+    <result column="topping" jdbcType="BIT" property="topping" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="modified" jdbcType="TIMESTAMP" property="modified" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, teacher_id, invitation_code, people_maximum, status, topping, created,
+    modified
+  </sql>
+</mapper>
