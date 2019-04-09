@@ -10,4 +10,10 @@ public interface UserService {
     List<Map<String,Object>> getAllUsers() throws Exception;
 
     List<UserModel> getAll();
+
+    boolean hasUserForOpenId(String openId);
+
+    int addUser(UserModel userModel);
+
+    UserModel findOneByOpenId(String openId);
 }

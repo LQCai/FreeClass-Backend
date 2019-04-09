@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="cn.starchild.common.dao.UserDao">
+  <resultMap id="BaseResultMap" type="cn.starchild.common.model.UserModel">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="serial_code" jdbcType="CHAR" property="serialCode" />
+    <result column="open_id" jdbcType="VARCHAR" property="openId" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="status" jdbcType="BIT" property="status" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="modified" jdbcType="TIMESTAMP" property="modified" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, serial_code, open_id, email, status, created, modified
+  </sql>
+
+  <select id="getAllUsers" resultType="java.util.Map">
+        SELECT * FROM t_user
+    </select>
+  <select id="hasUserForOpenId" resultType="_boolean" parameterType="string">
+        select id from t_user
+        where open_id = #{openId}
+    </select>
+  <select id="findOneByOpenId" resultType="cn.starchild.common.model.UserModel">
+        select * from t_user
+        where open_id = #{openId}
+    </select>
+</mapper>

@@ -1,7 +1,9 @@
 package cn.starchild.common.model;
 
+import javax.persistence.Table;
 import java.util.Date;
 
+@Table(name = "t_class")
 public class ClassModel {
     private String id;
 
