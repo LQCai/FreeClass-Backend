@@ -18,6 +18,10 @@ public class WeChatController {
     @RequestMapping("/getOpenId")
     @ResponseBody
     public ResData getOpenId(String code) {
+        if (code == null) {
+            return  ResData.error("code不可为空");
+        }
+
         WechatUtils wechatUtils = new WechatUtils();
         String openId = wechatUtils.getOpenId(code);
 
@@ -41,6 +45,10 @@ public class WeChatController {
     @RequestMapping("/getAuthOpenId")
     @ResponseBody
     public ResData getAuthOpenId(String code) {
+        if (code == null) {
+            return  ResData.error("code不可为空");
+        }
+
         WechatUtils wechatUtils = new WechatUtils();
         String openId = wechatUtils.getOpenId(code);
 

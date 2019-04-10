@@ -51,7 +51,7 @@ public class UserModel {
     }
 
     public void setOpenId(String openId) {
-        this.openId = openId == null ? null : openId.trim();
+        this.openId = openId;
     }
 
     public String getEmail() {
