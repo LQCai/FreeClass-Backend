@@ -3,18 +3,17 @@ package cn.starchild.common.model;
 import javax.persistence.Table;
 import java.util.Date;
 
-@Table(name = "t_user")
-public class UserModel {
-
+@Table(name = "t_homework_comment")
+public class HomeworkCommentModel {
     private String id;
 
-    private String name;
+    private String homeworkId;
 
-    private String serialCode;
+    private String userId;
 
-    private String openId;
+    private Boolean role;
 
-    private String email;
+    private String comment;
 
     private Boolean status;
 
@@ -30,36 +29,36 @@ public class UserModel {
         this.id = id == null ? null : id.trim();
     }
 
-    public String getName() {
-        return name;
+    public String getHomeworkId() {
+        return homeworkId;
     }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+    public void setHomeworkId(String homeworkId) {
+        this.homeworkId = homeworkId == null ? null : homeworkId.trim();
     }
 
-    public String getSerialCode() {
-        return serialCode;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setSerialCode(String serialCode) {
-        this.serialCode = serialCode == null ? null : serialCode.trim();
+    public void setUserId(String userId) {
+        this.userId = userId == null ? null : userId.trim();
     }
 
-    public String getOpenId() {
-        return openId;
+    public Boolean getRole() {
+        return role;
     }
 
-    public void setOpenId(String openId) {
-        this.openId = openId;
+    public void setRole(Boolean role) {
+        this.role = role;
     }
 
-    public String getEmail() {
-        return email;
+    public String getComment() {
+        return comment;
     }
 
-    public void setEmail(String email) {
-        this.email = email == null ? null : email.trim();
+    public void setComment(String comment) {
+        this.comment = comment == null ? null : comment.trim();
     }
 
     public Boolean getStatus() {

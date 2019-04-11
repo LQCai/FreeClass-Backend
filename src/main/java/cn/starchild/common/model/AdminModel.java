@@ -3,16 +3,17 @@ package cn.starchild.common.model;
 import javax.persistence.Table;
 import java.util.Date;
 
-@Table(name = "t_user")
-public class UserModel {
-
+@Table(name = "t_admin")
+public class AdminModel {
     private String id;
 
     private String name;
 
-    private String serialCode;
+    private String realName;
 
-    private String openId;
+    private String password;
+
+    private String telephone;
 
     private String email;
 
@@ -38,20 +39,28 @@ public class UserModel {
         this.name = name == null ? null : name.trim();
     }
 
-    public String getSerialCode() {
-        return serialCode;
+    public String getRealName() {
+        return realName;
     }
 
-    public void setSerialCode(String serialCode) {
-        this.serialCode = serialCode == null ? null : serialCode.trim();
+    public void setRealName(String realName) {
+        this.realName = realName == null ? null : realName.trim();
     }
 
-    public String getOpenId() {
-        return openId;
+    public String getPassword() {
+        return password;
     }
 
-    public void setOpenId(String openId) {
-        this.openId = openId;
+    public void setPassword(String password) {
+        this.password = password == null ? null : password.trim();
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone == null ? null : telephone.trim();
     }
 
     public String getEmail() {

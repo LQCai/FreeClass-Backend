@@ -3,22 +3,21 @@ package cn.starchild.common.model;
 import javax.persistence.Table;
 import java.util.Date;
 
-@Table(name = "t_user")
-public class UserModel {
-
+@Table(name = "t_help_category")
+public class HelpCategoryModel {
     private String id;
 
     private String name;
 
-    private String serialCode;
-
-    private String openId;
-
-    private String email;
-
     private Boolean status;
 
+    private Boolean sort;
+
+    private String creator;
+
     private Date created;
+
+    private String modifier;
 
     private Date modified;
 
@@ -38,30 +37,6 @@ public class UserModel {
         this.name = name == null ? null : name.trim();
     }
 
-    public String getSerialCode() {
-        return serialCode;
-    }
-
-    public void setSerialCode(String serialCode) {
-        this.serialCode = serialCode == null ? null : serialCode.trim();
-    }
-
-    public String getOpenId() {
-        return openId;
-    }
-
-    public void setOpenId(String openId) {
-        this.openId = openId;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email == null ? null : email.trim();
-    }
-
     public Boolean getStatus() {
         return status;
     }
@@ -70,12 +45,36 @@ public class UserModel {
         this.status = status;
     }
 
+    public Boolean getSort() {
+        return sort;
+    }
+
+    public void setSort(Boolean sort) {
+        this.sort = sort;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator == null ? null : creator.trim();
+    }
+
     public Date getCreated() {
         return created;
     }
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    public String getModifier() {
+        return modifier;
+    }
+
+    public void setModifier(String modifier) {
+        this.modifier = modifier == null ? null : modifier.trim();
     }
 
     public Date getModified() {

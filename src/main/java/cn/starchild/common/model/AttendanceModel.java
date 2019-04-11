@@ -3,18 +3,15 @@ package cn.starchild.common.model;
 import javax.persistence.Table;
 import java.util.Date;
 
-@Table(name = "t_user")
-public class UserModel {
-
+@Table(name = "t_attendance")
+public class AttendanceModel {
     private String id;
 
     private String name;
 
-    private String serialCode;
+    private String classId;
 
-    private String openId;
-
-    private String email;
+    private Boolean type;
 
     private Boolean status;
 
@@ -38,28 +35,20 @@ public class UserModel {
         this.name = name == null ? null : name.trim();
     }
 
-    public String getSerialCode() {
-        return serialCode;
+    public String getClassId() {
+        return classId;
     }
 
-    public void setSerialCode(String serialCode) {
-        this.serialCode = serialCode == null ? null : serialCode.trim();
+    public void setClassId(String classId) {
+        this.classId = classId == null ? null : classId.trim();
     }
 
-    public String getOpenId() {
-        return openId;
+    public Boolean getType() {
+        return type;
     }
 
-    public void setOpenId(String openId) {
-        this.openId = openId;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email == null ? null : email.trim();
+    public void setType(Boolean type) {
+        this.type = type;
     }
 
     public Boolean getStatus() {

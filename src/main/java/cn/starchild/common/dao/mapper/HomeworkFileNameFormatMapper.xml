@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.starchild.common.dao.HomeworkFileNameFormatDao">
+  <resultMap id="BaseResultMap" type="cn.starchild.common.model.HomeworkFileNameFormatModel">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="homework_id" jdbcType="CHAR" property="homeworkId" />
+    <result column="zip_name" jdbcType="VARCHAR" property="zipName" />
+    <result column="first_prefix" jdbcType="VARCHAR" property="firstPrefix" />
+    <result column="middle_prefix" jdbcType="VARCHAR" property="middlePrefix" />
+    <result column="last_prefix" jdbcType="VARCHAR" property="lastPrefix" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="modified" jdbcType="TIMESTAMP" property="modified" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, homework_id, zip_name, first_prefix, middle_prefix, last_prefix, created, modified
+  </sql>
+
+</mapper>

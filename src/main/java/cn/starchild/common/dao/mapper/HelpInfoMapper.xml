@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.starchild.common.dao.HelpInfoDao">
+  <resultMap id="BaseResultMap" type="cn.starchild.common.model.HelpInfoModel">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="help_category_id" jdbcType="CHAR" property="helpCategoryId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="status" jdbcType="BIT" property="status" />
+    <result column="sort" jdbcType="BIT" property="sort" />
+    <result column="creator" jdbcType="CHAR" property="creator" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="modifier" jdbcType="CHAR" property="modifier" />
+    <result column="modified" jdbcType="TIMESTAMP" property="modified" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="cn.starchild.common.model.HelpInfoModel">
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, help_category_id, title, status, sort, creator, created, modifier, modified
+  </sql>
+  <sql id="Blob_Column_List">
+    content
+  </sql>
+
+</mapper>

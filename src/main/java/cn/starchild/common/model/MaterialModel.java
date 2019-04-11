@@ -1,25 +1,23 @@
 package cn.starchild.common.model;
 
+import javax.persistence.Table;
 import java.util.Date;
 
-public class HomeWork {
+@Table(name = "t_material")
+public class MaterialModel {
     private String id;
-
-    private String name;
 
     private String classId;
 
+    private String name;
+
     private String introduction;
 
-    private String annexUrl;
+    private String materialUrl;
 
     private Boolean status;
 
-    private Boolean sendByEmail;
-
-    private Integer fullScore;
-
-    private Date deadline;
+    private Boolean topping;
 
     private Date created;
 
@@ -33,20 +31,20 @@ public class HomeWork {
         this.id = id == null ? null : id.trim();
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
-
     public String getClassId() {
         return classId;
     }
 
     public void setClassId(String classId) {
         this.classId = classId == null ? null : classId.trim();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
     }
 
     public String getIntroduction() {
@@ -57,12 +55,12 @@ public class HomeWork {
         this.introduction = introduction == null ? null : introduction.trim();
     }
 
-    public String getAnnexUrl() {
-        return annexUrl;
+    public String getMaterialUrl() {
+        return materialUrl;
     }
 
-    public void setAnnexUrl(String annexUrl) {
-        this.annexUrl = annexUrl == null ? null : annexUrl.trim();
+    public void setMaterialUrl(String materialUrl) {
+        this.materialUrl = materialUrl == null ? null : materialUrl.trim();
     }
 
     public Boolean getStatus() {
@@ -73,28 +71,12 @@ public class HomeWork {
         this.status = status;
     }
 
-    public Boolean getSendByEmail() {
-        return sendByEmail;
+    public Boolean getTopping() {
+        return topping;
     }
 
-    public void setSendByEmail(Boolean sendByEmail) {
-        this.sendByEmail = sendByEmail;
-    }
-
-    public Integer getFullScore() {
-        return fullScore;
-    }
-
-    public void setFullScore(Integer fullScore) {
-        this.fullScore = fullScore;
-    }
-
-    public Date getDeadline() {
-        return deadline;
-    }
-
-    public void setDeadline(Date deadline) {
-        this.deadline = deadline;
+    public void setTopping(Boolean topping) {
+        this.topping = topping;
     }
 
     public Date getCreated() {

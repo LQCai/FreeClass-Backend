@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.starchild.common.dao.BankUserForbidRecordDao">
+  <resultMap id="BaseResultMap" type="cn.starchild.common.model.BankUserForbidRecordModel">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="user_id" jdbcType="CHAR" property="userId" />
+    <result column="reason" jdbcType="VARCHAR" property="reason" />
+    <result column="creator" jdbcType="CHAR" property="creator" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, reason, creator, created
+  </sql>
+
+</mapper>

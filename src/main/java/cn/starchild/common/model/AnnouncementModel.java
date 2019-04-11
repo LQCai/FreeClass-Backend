@@ -3,24 +3,23 @@ package cn.starchild.common.model;
 import javax.persistence.Table;
 import java.util.Date;
 
-@Table(name = "t_user")
-public class UserModel {
-
+@Table(name = "t_announcement")
+public class AnnouncementModel {
     private String id;
 
-    private String name;
+    private String title;
 
-    private String serialCode;
+    private String annexUrl;
 
-    private String openId;
-
-    private String email;
+    private Boolean topping;
 
     private Boolean status;
 
     private Date created;
 
     private Date modified;
+
+    private String content;
 
     public String getId() {
         return id;
@@ -30,36 +29,28 @@ public class UserModel {
         this.id = id == null ? null : id.trim();
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+    public void setTitle(String title) {
+        this.title = title == null ? null : title.trim();
     }
 
-    public String getSerialCode() {
-        return serialCode;
+    public String getAnnexUrl() {
+        return annexUrl;
     }
 
-    public void setSerialCode(String serialCode) {
-        this.serialCode = serialCode == null ? null : serialCode.trim();
+    public void setAnnexUrl(String annexUrl) {
+        this.annexUrl = annexUrl == null ? null : annexUrl.trim();
     }
 
-    public String getOpenId() {
-        return openId;
+    public Boolean getTopping() {
+        return topping;
     }
 
-    public void setOpenId(String openId) {
-        this.openId = openId;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email == null ? null : email.trim();
+    public void setTopping(Boolean topping) {
+        this.topping = topping;
     }
 
     public Boolean getStatus() {
@@ -84,5 +75,13 @@ public class UserModel {
 
     public void setModified(Date modified) {
         this.modified = modified;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content == null ? null : content.trim();
     }
 }

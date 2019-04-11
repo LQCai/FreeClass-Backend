@@ -22,6 +22,10 @@ public class AccountInfoController {
     @RequestMapping("/info")
     @ResponseBody
     public ResData getAccountInfo(String code) {
+        if (code == null) {
+            return  ResData.error("code不可为空");
+        }
+
         WechatUtils wechatUtils = new WechatUtils();
         JSONObject accessInfo = wechatUtils.getAccessInfo(code);
 
@@ -43,6 +47,14 @@ public class AccountInfoController {
     @RequestMapping("/register")
     @ResponseBody
     public ResData postRegister(String openId, String nickName) {
+        if (openId == null) {
+            return  ResData.error("openId不可为空");
+        }
+
+        if (nickName == null) {
+            return  ResData.error("nickName不可为空");
+        }
+
         UserModel userModel = new UserModel();
         userModel.setId(UUIDUtils.uuid());
         userModel.setName(nickName);
