@@ -18,7 +18,7 @@
   <select id="getAllUsers" resultType="java.util.Map">
         SELECT * FROM t_user
     </select>
-  <select id="hasUserForOpenId" resultType="_boolean" parameterType="string">
+  <select id="hasUserForOpenId" resultType="boolean" parameterType="string">
         select id from t_user
         where open_id = #{openId}
     </select>
