@@ -8,6 +8,7 @@ import cn.starchild.user.service.UserService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -44,9 +45,43 @@ public class AccountInfoController {
         return  ResData.ok(userModel);
     }
 
+    /**
+     * 通过openId获取用户信息
+     *
+     * @param openId
+     * @return
+     */
+    @RequestMapping("/infoForOpenId")
+    @ResponseBody
+    public ResData getAccountInfoForOpenId(String openId) {
+        if (openId == null) {
+            return  ResData.error("code不可为空");
+        }
+
+        UserModel userModel = userService.findOneByOpenId(openId);
+
+        if (userModel == null) {
+            return  ResData.error("该用户未注册");
+        }
+
+        return  ResData.ok(userModel);
+    }
+
+    /**
+     * 用户注册
+     *
+     * @param jsonString
+     * @return
+     */
     @RequestMapping("/register")
     @ResponseBody
-    public ResData postRegister(String openId, String nickName) {
+    public ResData postRegister(@RequestBody String jsonString) {
+        JSONObject json = JSONObject.parseObject(jsonString);
+        JSONObject userObject = json.getJSONObject("user");
+
+        String openId = userObject.getString("openId");
+        String nickName = userObject.getString("nickName");
+
         if (openId == null) {
             return  ResData.error("openId不可为空");
         }
