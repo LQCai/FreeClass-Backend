@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
@@ -107,5 +108,18 @@ public class AccountInfoController {
         }
 
         return  ResData.ok();
+    }
+
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @ResponseBody
+    public ResData UpdateInfo(@RequestBody String userInfo) {
+        JSONObject userInfoJson = JSONObject.parseObject(userInfo).getJSONObject("user");
+
+        boolean result = userService.updateInfo(userInfoJson);
+
+        if (!result) {
+            return ResData.error("修改失败");
+        }
+        return ResData.ok("修改成功");
     }
 }

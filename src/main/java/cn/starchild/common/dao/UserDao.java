@@ -12,4 +12,6 @@ public interface UserDao extends Mapper<UserModel> {
     boolean hasUserForOpenId(String openId);
 
     UserModel findOneByOpenId(String openId);
+
+    boolean updateByOpenId(UserModel user);
 }

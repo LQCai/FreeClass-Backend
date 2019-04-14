@@ -14,8 +14,26 @@
   <sql id="Base_Column_List">
     id, name, serial_code, open_id, email, status, created, modified
   </sql>
+    <update id="updateByOpenId" parameterType="cn.starchild.common.model.UserModel">
+      update t_user
+      <set>
+        <if test="name != null">
+          name = #{name,jdbcType=VARCHAR},
+        </if>
+        <if test="serialCode != null">
+          serial_code = #{serialCode,jdbcType=VARCHAR},
+        </if>
+        <if test="email != null">
+          email = #{email,jdbcType=VARCHAR},
+        </if>
+        <if test="modified != null">
+          modified = #{modified,jdbcType=TIMESTAMP},
+        </if>
+      </set>
+      where open_id = #{openId,jdbcType=VARCHAR}
+    </update>
 
-  <select id="getAllUsers" resultType="java.util.Map">
+    <select id="getAllUsers" resultType="java.util.Map">
         SELECT * FROM t_user
     </select>
   <select id="hasUserForOpenId" resultType="boolean" parameterType="string">
