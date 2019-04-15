@@ -30,7 +30,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean hasUserForOpenId(String openId) {
-        return userDao.hasUserForOpenId(openId);
+        String id = userDao.hasUserForOpenId(openId);
+
+        if (id == null) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -71,6 +77,17 @@ public class UserServiceImpl implements UserService {
         user.setModified(new Date());
 
         return userDao.updateByOpenId(user);
+    }
+
+    @Override
+    public boolean validateRegister(String openId) {
+        String id = userDao.hasUserForOpenId(openId);
+
+        if (id == null) {
+            return false;
+        }
+
+        return true;
     }
 
 

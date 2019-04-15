@@ -3,6 +3,10 @@ package cn.starchild.common.dao;
 import cn.starchild.common.model.ClassModel;
 import tk.mybatis.mapper.common.Mapper;
 
+import java.util.List;
+import java.util.Map;
+
 public interface ClassDao extends Mapper<ClassModel> {
 
+    List selectMyTeachingClassList(String id);
 }

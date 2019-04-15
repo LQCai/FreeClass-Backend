@@ -2,6 +2,9 @@ package cn.starchild.common.domain;
 
 import java.util.HashMap;
 
+import static cn.starchild.common.domain.Code.FAIL;
+import static cn.starchild.common.domain.Code.SUCCESS;
+
 /**
  * 泛型实体类
  *
@@ -11,14 +14,23 @@ public class ResData extends HashMap<String, Object> {
 
     private static final long serialVersionUID = -8713837118340960775L;
 
-    // 成功
-    private static final String SUCCESS = "0000";
-
-    // 异常 失败
-    private static final String FAIL = "500";
 
     public ResData() {
         put("code", SUCCESS);
+    }
+
+    /**
+     * 错误返回数据
+     *
+     * @param code
+     * @param msg
+     * @return
+     */
+    public static ResData error(String code, Object msg) {
+        ResData resData = new ResData();
+        resData.put("code", code);
+        resData.put("msg", msg);
+        return resData;
     }
 
     public static ResData error(Object msg) {

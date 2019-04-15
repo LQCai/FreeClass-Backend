@@ -9,7 +9,7 @@ import java.util.Map;
 public interface UserDao extends Mapper<UserModel> {
     List<Map<String, Object>> getAllUsers();
 
-    boolean hasUserForOpenId(String openId);
+    String hasUserForOpenId(String openId);
 
     UserModel findOneByOpenId(String openId);
 

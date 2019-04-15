@@ -19,4 +19,6 @@ public interface UserService {
     UserModel findOneByOpenId(String openId);
 
     boolean updateInfo(JSONObject userInfoJson);
+
+    boolean validateRegister(String openId);
 }

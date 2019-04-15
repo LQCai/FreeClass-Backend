@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
 
+import static cn.starchild.common.domain.Code.USER_EXIST;
+
 @RequestMapping("/user/account")
 @Controller
 public class AccountInfoController {
@@ -89,6 +91,12 @@ public class AccountInfoController {
 
         if (nickName == null) {
             return  ResData.error("nickName不可为空");
+        }
+
+        // 判断用户是否已存在
+        boolean isRegister = userService.validateRegister(openId);
+        if (isRegister) {
+            return ResData.error(USER_EXIST, "用户已存在");
         }
 
         UserModel userModel = new UserModel();
