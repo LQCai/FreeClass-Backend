@@ -26,8 +26,8 @@ public class UserModel {
 
     private Date modified;
 
-//    private List<ClassModel> classes;
-    private ClassModel classModel;
+    private List<ClassModel> classes;
+//    private ClassModel classModel;
 
     public String getId() {
         return id;
@@ -93,20 +93,20 @@ public class UserModel {
         this.modified = modified;
     }
 
-//    public List<ClassModel> getClasses() {
-//        return classes;
+    public List<ClassModel> getClasses() {
+        return classes;
+    }
+
+    public void setClasses(List<ClassModel> classes) {
+        this.classes = classes;
+    }
+
+//
+//    public ClassModel getClassModel() {
+//        return classModel;
 //    }
 //
-//    public void setClasses(List<ClassModel> classes) {
-//        this.classes = classes;
+//    public void setClassModel(ClassModel classModel) {
+//        this.classModel = classModel;
 //    }
-
-
-    public ClassModel getClassModel() {
-        return classModel;
-    }
-
-    public void setClassModel(ClassModel classModel) {
-        this.classModel = classModel;
-    }
 }

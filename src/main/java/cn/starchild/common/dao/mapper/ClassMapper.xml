@@ -12,31 +12,8 @@
         <result column="created" jdbcType="TIMESTAMP" property="created"/>
         <result column="modified" jdbcType="TIMESTAMP" property="modified"/>
     </resultMap>
-    <resultMap id="selectForMyClassList" type="User">
-        <id column="id" property="id" jdbcType="VARCHAR"/>
-        <result column="name" property="name" jdbcType="VARCHAR"/>
-
-        <collection property="classModel" javaType="java.util.List" ofType="Class">
-            <id column="id" property="id" jdbcType="VARCHAR"/>
-            <result column="name" property="name" jdbcType="VARCHAR"/>
-            <result column="teacher_id" property="teacherId" jdbcType="VARCHAR"/>
-            <result column="invitation_code" property="invitationCode" jdbcType="VARCHAR"/>
-
-        </collection>
-    </resultMap>
     <sql id="Base_Column_List">
     id, name, teacher_id, invitation_code, people_maximum, status, topping, created,
     modified
   </sql>
-    <select id="selectMyTeachingClassList" resultMap="selectForMyClassList" parameterType="String">
-    select
-    u.id,
-    u.name,
-    c.id class_id,
-    c.name class_name,
-    c.invitation_code
-    from t_class c
-    join t_user u
-    on c.teacher_id = u.id
-    </select>
 </mapper>

@@ -1,12 +1,13 @@
 package cn.starchild.common.model;
 
 import org.apache.ibatis.type.Alias;
+import org.apache.ibatis.type.MappedTypes;
 
 import javax.persistence.Table;
 import java.util.Date;
 
 @Alias(value = "Class")
-//@Table(name = "t_class")
+@Table(name = "t_class")
 public class ClassModel {
     private String id;
 

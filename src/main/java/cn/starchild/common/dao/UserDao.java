@@ -14,4 +14,6 @@ public interface UserDao extends Mapper<UserModel> {
     UserModel findOneByOpenId(String openId);
 
     boolean updateByOpenId(UserModel user);
+
+    List selectMyTeachingClassList(String id);
 }

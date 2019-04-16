@@ -10,7 +10,23 @@
     <result column="status" jdbcType="BIT" property="status" />
     <result column="created" jdbcType="TIMESTAMP" property="created" />
     <result column="modified" jdbcType="TIMESTAMP" property="modified" />
+    <result column="modified" jdbcType="TIMESTAMP" property="classes" />
   </resultMap>
+
+  <resultMap id="selectForMyClassList" type="User">
+    <id column="id" property="id" jdbcType="VARCHAR"/>
+    <result column="name" property="name" jdbcType="VARCHAR"/>
+
+    <collection property="classes" javaType="java.util.List" ofType="Class" typeHandler="cn.starchild.common.handler.ClassHandler">
+      <id column="id" property="id" jdbcType="VARCHAR"/>
+      <result column="name" property="name" jdbcType="VARCHAR"/>
+      <result column="teacher_id" property="teacherId" jdbcType="VARCHAR"/>
+      <result column="invitation_code" property="invitationCode" jdbcType="VARCHAR"/>
+
+    </collection>
+  </resultMap>
+
+
   <sql id="Base_Column_List">
     id, name, serial_code, open_id, email, status, created, modified
   </sql>
@@ -43,5 +59,17 @@
   <select id="findOneByOpenId" resultMap="BaseResultMap">
         select * from t_user
         where open_id = #{openId}
+    </select>
+
+  <select id="selectMyTeachingClassList" resultMap="selectForMyClassList" parameterType="String">
+    select
+    u.id,
+    u.name,
+    c.id class_id,
+    c.name class_name,
+    c.invitation_code
+    from t_class c
+    join t_user u
+    on c.teacher_id = u.id
     </select>
 </mapper>
