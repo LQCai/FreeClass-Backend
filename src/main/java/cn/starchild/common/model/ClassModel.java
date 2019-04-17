@@ -1,7 +1,6 @@
 package cn.starchild.common.model;
 
 import org.apache.ibatis.type.Alias;
-import org.apache.ibatis.type.MappedTypes;
 
 import javax.persistence.Table;
 import java.util.Date;
@@ -17,11 +16,11 @@ public class ClassModel {
 
     private String invitationCode;
 
-    private Boolean peopleMaximum;
+    private byte peopleMaximum;
 
-    private Boolean status;
+    private byte status;
 
-    private Boolean topping;
+    private byte topping;
 
     private Date created;
 
@@ -59,27 +58,27 @@ public class ClassModel {
         this.invitationCode = invitationCode == null ? null : invitationCode.trim();
     }
 
-    public Boolean getPeopleMaximum() {
+    public byte getPeopleMaximum() {
         return peopleMaximum;
     }
 
-    public void setPeopleMaximum(Boolean peopleMaximum) {
+    public void setPeopleMaximum(byte peopleMaximum) {
         this.peopleMaximum = peopleMaximum;
     }
 
-    public Boolean getStatus() {
+    public byte getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(byte status) {
         this.status = status;
     }
 
-    public Boolean getTopping() {
+    public byte getTopping() {
         return topping;
     }
 
-    public void setTopping(Boolean topping) {
+    public void setTopping(byte topping) {
         this.topping = topping;
     }
 

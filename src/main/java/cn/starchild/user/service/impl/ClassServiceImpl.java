@@ -3,14 +3,16 @@ package cn.starchild.user.service.impl;
 import cn.starchild.common.dao.ClassDao;
 import cn.starchild.common.dao.ClassStudentDao;
 import cn.starchild.common.dao.UserDao;
+import cn.starchild.common.model.ClassModel;
+import cn.starchild.common.util.RandomUtils;
+import cn.starchild.common.util.UUIDUtils;
 import cn.starchild.user.service.ClassService;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.logging.Logger;
 
 @Service
 public class ClassServiceImpl implements ClassService {
@@ -23,6 +25,8 @@ public class ClassServiceImpl implements ClassService {
 
     @Resource
     private ClassStudentDao classStudentDao;
+
+    private Logger logger;
 
     @Override
     public List<Map<String, Object>> getMyTeachingClassList(String id) {
@@ -86,5 +90,49 @@ public class ClassServiceImpl implements ClassService {
         }
 
         return myStudyingClassList;
+    }
+
+    @Override
+    public boolean createClass(JSONObject classData) {
+        String teacherId = classData.getString("teacherId");
+        String className = classData.getString("className");
+        byte peopleMaximum = classData.getByte("peopleMaximum");
+        byte topping = classData.getByte("topping");
+
+        String invitationCode = RandomUtils.getRandomStr(6);
+        List<String> invitationCodeList = classDao.selectClassCodeList();
+
+        // 判断邀请码是否和已有课程重复
+        for (String code :
+                invitationCodeList) {
+            if (invitationCode.equals(code)) {
+                do {
+                    invitationCode = RandomUtils.getRandomStr(6);
+                }
+                while (!invitationCode.equals(code));
+                break;
+            }
+        }
+
+
+        ClassModel classModel = new ClassModel();
+        classModel.setId(UUIDUtils.uuid());
+        classModel.setName(className);
+        classModel.setTeacherId(teacherId);
+        classModel.setInvitationCode(RandomUtils.getRandomStr(6));
+        classModel.setStatus((byte) 1);
+        classModel.setPeopleMaximum(peopleMaximum);
+        classModel.setTopping(topping);
+        classModel.setCreated(new Date());
+        classModel.setModified(new Date());
+
+        try {
+            classDao.insert(classModel);
+        } catch (Exception e) {
+            logger.warning("创建班级失败:" + e.getMessage());
+            return false;
+        }
+
+        return true;
     }
 }

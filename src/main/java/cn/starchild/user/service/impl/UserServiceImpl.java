@@ -90,5 +90,14 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    @Override
+    public boolean validateUser(String id) {
+        if (userDao.validateUserById(id) == null) {
+            return false;
+        }
+
+        return true;
+    }
+
 
 }

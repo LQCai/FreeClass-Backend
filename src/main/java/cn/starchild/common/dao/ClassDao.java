@@ -13,4 +13,6 @@ public interface ClassDao extends Mapper<ClassModel> {
     List<Map<String, Object>> selectMyStudyingClassList(String id);
 
     Integer selectCountForId(String classId);
+
+    List<String> selectClassCodeList();
 }

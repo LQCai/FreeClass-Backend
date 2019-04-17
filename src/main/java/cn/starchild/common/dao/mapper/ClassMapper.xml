@@ -6,9 +6,9 @@
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="teacher_id" jdbcType="CHAR" property="teacherId"/>
         <result column="invitation_code" jdbcType="CHAR" property="invitationCode"/>
-        <result column="people_maximum" jdbcType="BIT" property="peopleMaximum"/>
-        <result column="status" jdbcType="BIT" property="status"/>
-        <result column="topping" jdbcType="BIT" property="topping"/>
+        <result column="people_maximum" jdbcType="TINYINT" property="peopleMaximum"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="topping" jdbcType="TINYINT" property="topping"/>
         <result column="created" jdbcType="TIMESTAMP" property="created"/>
         <result column="modified" jdbcType="TIMESTAMP" property="modified"/>
     </resultMap>
@@ -47,5 +47,9 @@
         select count(id)
         from t_class_student
         where class_id = #{classId}
+    </select>
+    <select id="selectClassCodeList" resultType="java.lang.String">
+        select invitation_code
+        from t_class
     </select>
 </mapper>

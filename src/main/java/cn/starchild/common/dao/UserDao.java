@@ -16,4 +16,5 @@ public interface UserDao extends Mapper<UserModel> {
 
     boolean updateByOpenId(UserModel user);
 
+    String validateUserById(String id);
 }

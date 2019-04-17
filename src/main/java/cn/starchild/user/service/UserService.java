@@ -21,4 +21,6 @@ public interface UserService {
     boolean updateInfo(JSONObject userInfoJson);
 
     boolean validateRegister(String openId);
+
+    boolean validateUser(String teacherId);
 }

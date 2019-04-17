@@ -66,6 +66,11 @@
         from t_user
         where open_id = #{openId}
     </select>
+    <select id="validateUserById" resultType="java.lang.String" parameterType="string">
+        select id
+        from t_user
+        where id = #{id}
+    </select>
 
 
 </mapper>
