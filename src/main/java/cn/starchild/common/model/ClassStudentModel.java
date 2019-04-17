@@ -14,7 +14,7 @@ public class ClassStudentModel {
 
     private String studentId;
 
-    private Boolean status;
+    private byte status;
 
     private Date created;
 
@@ -44,11 +44,11 @@ public class ClassStudentModel {
         this.studentId = studentId == null ? null : studentId.trim();
     }
 
-    public Boolean getStatus() {
+    public byte getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(byte status) {
         this.status = status;
     }
 

@@ -15,4 +15,10 @@ public interface ClassDao extends Mapper<ClassModel> {
     Integer selectCountForId(String classId);
 
     List<String> selectClassCodeList();
+
+    boolean updateById(ClassModel classModel);
+
+    ClassModel validateClass(String id);
+
+    ClassModel validateClassByCode(String code);
 }

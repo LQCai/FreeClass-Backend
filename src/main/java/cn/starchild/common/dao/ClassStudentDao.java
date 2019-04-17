@@ -8,4 +8,8 @@ import java.util.Map;
 
 public interface ClassStudentDao extends Mapper<ClassStudentModel> {
     List<Map<String, Object>> selectSimpleList(String teacherId);
+
+    List<Map<String, Object>> validateJoined(ClassStudentModel classStudent);
+
+    boolean joinClass(ClassStudentModel data);
 }

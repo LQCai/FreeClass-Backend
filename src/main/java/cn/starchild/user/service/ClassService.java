@@ -1,5 +1,6 @@
 package cn.starchild.user.service;
 
+import cn.starchild.common.model.ClassModel;
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.List;
@@ -12,4 +13,12 @@ public interface ClassService {
     List<Map<String, Object>> getMyStudyingClassList(String id);
 
     boolean createClass(JSONObject classData);
+
+    boolean updateClass(JSONObject classData);
+
+    boolean validateClass(String id);
+
+    boolean validateClassByCode(String code);
+
+    ClassModel getClassByCode(String code);
 }
