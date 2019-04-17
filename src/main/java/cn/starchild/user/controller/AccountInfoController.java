@@ -8,10 +8,14 @@ import cn.starchild.user.service.UserService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
+
+import static cn.starchild.common.domain.Code.USER_EXIST;
 
 @RequestMapping("/user/account")
 @Controller
@@ -44,15 +48,55 @@ public class AccountInfoController {
         return  ResData.ok(userModel);
     }
 
+    /**
+     * 通过openId获取用户信息
+     *
+     * @param openId
+     * @return
+     */
+    @RequestMapping("/infoForOpenId")
+    @ResponseBody
+    public ResData getAccountInfoForOpenId(String openId) {
+        if (openId == null) {
+            return  ResData.error("code不可为空");
+        }
+
+        UserModel userModel = userService.findOneByOpenId(openId);
+
+        if (userModel == null) {
+            return  ResData.error("该用户未注册");
+        }
+
+        return  ResData.ok(userModel);
+    }
+
+    /**
+     * 用户注册
+     *
+     * @param jsonString
+     * @return
+     */
     @RequestMapping("/register")
     @ResponseBody
-    public ResData postRegister(String openId, String nickName) {
+    public ResData postRegister(@RequestBody String jsonString) {
+        JSONObject json = JSONObject.parseObject(jsonString);
+        JSONObject userObject = json.getJSONObject("user");
+
+        String openId = userObject.getString("openId");
+        String nickName = userObject.getString("nickName");
+
         if (openId == null) {
             return  ResData.error("openId不可为空");
         }
 
         if (nickName == null) {
             return  ResData.error("nickName不可为空");
+        }
+
+        // 判断用户是否已存在
+        boolean isRegister = userService.validateRegister(openId);
+        if (isRegister) {
+            return ResData.error(USER_EXIST, "用户已存在");
         }
 
         UserModel userModel = new UserModel();
@@ -72,5 +116,18 @@ public class AccountInfoController {
         }
 
         return  ResData.ok();
+    }
+
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @ResponseBody
+    public ResData UpdateInfo(@RequestBody String userInfo) {
+        JSONObject userInfoJson = JSONObject.parseObject(userInfo).getJSONObject("user");
+
+        boolean result = userService.updateInfo(userInfoJson);
+
+        if (!result) {
+            return ResData.error("修改失败");
+        }
+        return ResData.ok("修改成功");
     }
 }

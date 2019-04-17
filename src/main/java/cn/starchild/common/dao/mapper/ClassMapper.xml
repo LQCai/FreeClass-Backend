@@ -1,19 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.starchild.common.dao.ClassDao">
-  <resultMap id="BaseResultMap" type="cn.starchild.common.model.ClassModel">
-    <id column="id" jdbcType="CHAR" property="id" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="teacher_id" jdbcType="CHAR" property="teacherId" />
-    <result column="invitation_code" jdbcType="CHAR" property="invitationCode" />
-    <result column="people_maximum" jdbcType="BIT" property="peopleMaximum" />
-    <result column="status" jdbcType="BIT" property="status" />
-    <result column="topping" jdbcType="BIT" property="topping" />
-    <result column="created" jdbcType="TIMESTAMP" property="created" />
-    <result column="modified" jdbcType="TIMESTAMP" property="modified" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, name, teacher_id, invitation_code, people_maximum, status, topping, created,
+    <resultMap id="BaseResultMap" type="cn.starchild.common.model.ClassModel">
+        <id column="id" jdbcType="CHAR" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="teacher_id" jdbcType="CHAR" property="teacherId"/>
+        <result column="invitation_code" jdbcType="CHAR" property="invitationCode"/>
+        <result column="people_maximum" jdbcType="TINYINT" property="peopleMaximum"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="topping" jdbcType="TINYINT" property="topping"/>
+        <result column="created" jdbcType="TIMESTAMP" property="created"/>
+        <result column="modified" jdbcType="TIMESTAMP" property="modified"/>
+    </resultMap>
+
+    <!--    <resultMap id="UserResultMap" type="User">-->
+    <!--        <id column="user_id" jdbcType="CHAR" property="id"/>-->
+    <!--    </resultMap>-->
+    <sql id="Base_Column_List">
+        id, name, teacher_id, invitation_code, people_maximum, status, topping, created,
     modified
-  </sql>
+    </sql>
+
+    <select id="selectMyTeachingClassList" resultType="java.util.Map" parameterType="string">
+        select u.id   user_id,
+               u.name user_name,
+               c.id,
+               c.name,
+               c.invitation_code
+        from t_user u
+                 left join t_class c
+                           on c.teacher_id = u.id
+        where u.id = #{id}
+    </select>
+    <select id="selectMyStudyingClassList" resultType="java.util.Map" parameterType="string">
+        select c.id,
+               c.name,
+               c.invitation_code,
+               cs.id  class_student_id,
+               u.name teacher_name
+        from t_class c
+                 left join t_user u on c.teacher_id = u.id
+                 join t_class_student cs on cs.class_id = c.id
+        where cs.student_id = #{id}
+    </select>
+    <select id="selectCountForId" resultType="java.lang.Integer" parameterType="string">
+        select count(id)
+        from t_class_student
+        where class_id = #{classId}
+    </select>
+    <select id="selectClassCodeList" resultType="java.lang.String">
+        select invitation_code
+        from t_class
+    </select>
 </mapper>

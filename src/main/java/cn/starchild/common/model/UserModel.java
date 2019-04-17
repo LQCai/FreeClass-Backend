@@ -1,8 +1,12 @@
 package cn.starchild.common.model;
 
+import org.apache.ibatis.type.Alias;
+
 import javax.persistence.Table;
 import java.util.Date;
+import java.util.List;
 
+@Alias(value = "User")
 @Table(name = "t_user")
 public class UserModel {
 
@@ -85,4 +89,5 @@ public class UserModel {
     public void setModified(Date modified) {
         this.modified = modified;
     }
+
 }
