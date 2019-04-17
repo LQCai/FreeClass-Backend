@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.starchild.common.dao.ClassStudentDao">
-  <resultMap id="BaseResultMap" type="cn.starchild.common.model.ClassStudentModel">
-    <id column="id" jdbcType="CHAR" property="id" />
-    <result column="class_id" jdbcType="CHAR" property="classId" />
-    <result column="student_id" jdbcType="CHAR" property="studentId" />
-    <result column="status" jdbcType="BIT" property="status" />
-    <result column="created" jdbcType="TIMESTAMP" property="created" />
-    <result column="modified" jdbcType="TIMESTAMP" property="modified" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, class_id, student_id, status, created, modified
-  </sql>
+    <resultMap id="BaseResultMap" type="cn.starchild.common.model.ClassStudentModel">
+        <id column="id" jdbcType="CHAR" property="id"/>
+        <result column="class_id" jdbcType="CHAR" property="classId"/>
+        <result column="student_id" jdbcType="CHAR" property="studentId"/>
+        <result column="status" jdbcType="BIT" property="status"/>
+        <result column="created" jdbcType="TIMESTAMP" property="created"/>
+        <result column="modified" jdbcType="TIMESTAMP" property="modified"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, class_id, student_id, status, created, modified
+    </sql>
+
+    <select id="selectSimpleList" resultType="java.util.Map" parameterType="string">
+        select sc.id,
+               c.id class_id
+        from t_class c
+                 join t_class_student sc
+                      on c.id = sc.class_id
+        where c.teacher_id = #{id}
+    </select>
 
 </mapper>

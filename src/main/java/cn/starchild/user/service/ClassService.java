@@ -5,5 +5,7 @@ import java.util.Map;
 
 public interface ClassService {
 
-    List getMyTeachingClassList(String id);
+    List<Map<String, Object>> getMyTeachingClassList(String id);
+
+    List<Map<String, Object>> getMyStudyingClassList(String id);
 }

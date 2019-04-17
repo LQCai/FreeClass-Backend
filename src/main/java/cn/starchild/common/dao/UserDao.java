@@ -3,6 +3,7 @@ package cn.starchild.common.dao;
 import cn.starchild.common.model.UserModel;
 import tk.mybatis.mapper.common.Mapper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,5 +16,4 @@ public interface UserDao extends Mapper<UserModel> {
 
     boolean updateByOpenId(UserModel user);
 
-    List selectMyTeachingClassList(String id);
 }

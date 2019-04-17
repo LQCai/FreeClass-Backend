@@ -1,75 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  <mapper namespace="cn.starchild.common.dao.UserDao">
-  <resultMap id="BaseResultMap" type="cn.starchild.common.model.UserModel">
-    <id column="id" jdbcType="CHAR" property="id" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="serial_code" jdbcType="CHAR" property="serialCode" />
-    <result column="open_id" jdbcType="VARCHAR" property="openId" />
-    <result column="email" jdbcType="VARCHAR" property="email" />
-    <result column="status" jdbcType="BIT" property="status" />
-    <result column="created" jdbcType="TIMESTAMP" property="created" />
-    <result column="modified" jdbcType="TIMESTAMP" property="modified" />
-    <result column="modified" jdbcType="TIMESTAMP" property="classes" />
-  </resultMap>
+<mapper namespace="cn.starchild.common.dao.UserDao">
+    <resultMap id="UserResultMap" type="cn.starchild.common.model.UserModel">
+        <id column="id" jdbcType="CHAR" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="serial_code" jdbcType="CHAR" property="serialCode"/>
+        <result column="open_id" jdbcType="VARCHAR" property="openId"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="status" jdbcType="BIT" property="status"/>
+        <result column="created" jdbcType="TIMESTAMP" property="created"/>
+        <result column="modified" jdbcType="TIMESTAMP" property="modified"/>
+    </resultMap>
 
-  <resultMap id="selectForMyClassList" type="User">
-    <id column="id" property="id" jdbcType="VARCHAR"/>
-    <result column="name" property="name" jdbcType="VARCHAR"/>
+    <resultMap id="ClassResultMap" type="Class">
+        <id column="class_id" jdbcType="CHAR" property="id"/>
+        <result column="class_name" jdbcType="VARCHAR" property="name"/>
+        <result column="teacher_id" jdbcType="CHAR" property="teacherId"/>
+        <result column="invitation_code" jdbcType="CHAR" property="invitationCode"/>
+        <result column="people_maximum" jdbcType="BIT" property="peopleMaximum"/>
+        <result column="status" jdbcType="BIT" property="status"/>
+        <result column="topping" jdbcType="BIT" property="topping"/>
+        <result column="created" jdbcType="TIMESTAMP" property="created"/>
+        <result column="modified" jdbcType="TIMESTAMP" property="modified"/>
+    </resultMap>
 
-    <collection property="classes" javaType="java.util.List" ofType="Class" typeHandler="cn.starchild.common.handler.ClassHandler">
-      <id column="id" property="id" jdbcType="VARCHAR"/>
-      <result column="name" property="name" jdbcType="VARCHAR"/>
-      <result column="teacher_id" property="teacherId" jdbcType="VARCHAR"/>
-      <result column="invitation_code" property="invitationCode" jdbcType="VARCHAR"/>
+    <resultMap id="ClassStudentResultMap" type="ClassStudent">
+        <id column="class_student_id" jdbcType="CHAR" property="id"/>
+        <result column="class_id" jdbcType="CHAR" property="classId"/>
+        <result column="student_id" jdbcType="CHAR" property="studentId"/>
+        <result column="status" jdbcType="BIT" property="status"/>
+        <result column="created" jdbcType="TIMESTAMP" property="created"/>
+        <result column="modified" jdbcType="TIMESTAMP" property="modified"/>
+    </resultMap>
 
-    </collection>
-  </resultMap>
-
-
-  <sql id="Base_Column_List">
-    id, name, serial_code, open_id, email, status, created, modified
-  </sql>
     <update id="updateByOpenId" parameterType="cn.starchild.common.model.UserModel">
-      update t_user
-      <set>
-        <if test="name != null">
-          name = #{name,jdbcType=VARCHAR},
-        </if>
-        <if test="serialCode != null">
-          serial_code = #{serialCode,jdbcType=VARCHAR},
-        </if>
-        <if test="email != null">
-          email = #{email,jdbcType=VARCHAR},
-        </if>
-        <if test="modified != null">
-          modified = #{modified,jdbcType=TIMESTAMP},
-        </if>
-      </set>
-      where open_id = #{openId,jdbcType=VARCHAR}
+        update t_user
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="serialCode != null">
+                serial_code = #{serialCode,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="modified != null">
+                modified = #{modified,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where open_id = #{openId,jdbcType=VARCHAR}
     </update>
 
     <select id="getAllUsers" resultType="java.util.Map">
-        SELECT * FROM t_user
+        SELECT *
+        FROM t_user
     </select>
-  <select id="hasUserForOpenId" resultType="String" parameterType="string">
-        select id from t_user
+    <select id="hasUserForOpenId" resultType="String" parameterType="string">
+        select id
+        from t_user
         where open_id = #{openId}
     </select>
-  <select id="findOneByOpenId" resultMap="BaseResultMap">
-        select * from t_user
+    <select id="findOneByOpenId" resultMap="UserResultMap">
+        select *
+        from t_user
         where open_id = #{openId}
     </select>
 
-  <select id="selectMyTeachingClassList" resultMap="selectForMyClassList" parameterType="String">
-    select
-    u.id,
-    u.name,
-    c.id class_id,
-    c.name class_name,
-    c.invitation_code
-    from t_class c
-    join t_user u
-    on c.teacher_id = u.id
-    </select>
+
 </mapper>

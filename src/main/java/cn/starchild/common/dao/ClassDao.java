@@ -8,5 +8,9 @@ import java.util.Map;
 
 public interface ClassDao extends Mapper<ClassModel> {
 
-    List selectMyTeachingClassList(String id);
+    List<Map<String, Object>> selectMyTeachingClassList(String id);
+
+    List<Map<String, Object>> selectMyStudyingClassList(String id);
+
+    Integer selectCountForId(String classId);
 }

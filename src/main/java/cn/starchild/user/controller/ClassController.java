@@ -1,6 +1,5 @@
 package cn.starchild.user.controller;
 
-import cn.starchild.common.domain.Code;
 import cn.starchild.common.domain.ResData;
 import cn.starchild.user.service.ClassService;
 import cn.starchild.user.service.UserService;
@@ -29,9 +28,14 @@ public class ClassController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ResData getList(String id) {
-        List classList = classService.getMyTeachingClassList(id);
+        List<Map<String, Object>> myTeachingClassList = classService.getMyTeachingClassList(id);
 
+        List<Map<String, Object>> myStudyingClassList = classService.getMyStudyingClassList(id);
 
-        return ResData.ok(classList);
+        ResData res = new ResData();
+        res.put("myTeachingClassList", myTeachingClassList);
+        res.put("myStudyingClassList", myStudyingClassList);
+
+        return res;
     }
 }
