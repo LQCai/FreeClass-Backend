@@ -65,7 +65,7 @@ public class ClassController {
         if (!classData.containsKey("topping")) {
             return ResData.error(Code.PARAM_FORMAT_ERROR, "课堂默认置顶不可为空");
         }
-        if (!classData.getInteger("topping").equals(1) || !classData.getInteger("topping").equals(2)) {
+        if (!classData.getInteger("topping").equals(1) && !classData.getInteger("topping").equals(2)) {
             return ResData.error(Code.PARAM_FORMAT_ERROR, "课堂默认置顶只能是1或2");
         }
 
