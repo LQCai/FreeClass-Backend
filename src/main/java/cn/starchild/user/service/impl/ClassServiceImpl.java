@@ -69,9 +69,15 @@ public class ClassServiceImpl implements ClassService {
             Map<String, Object> myStudyingClass = new HashMap<>();
 
             myStudyingClass.put("id", classInfo.get("id"));
-            myStudyingClass.put("name", classInfo.get("name"));
+
+            if (!classInfo.containsKey("name")) {
+                myStudyingClass.put("name", "未知");
+            } else {
+                myStudyingClass.put("name", classInfo.get("name"));
+            }
             myStudyingClass.put("invitationCode", classInfo.get("invitation_code"));
             myStudyingClass.put("teacherName", classInfo.get("teacher_name"));
+
 
             Integer classStudentCount = classDao.selectCountForId(classInfo.get("id").toString());
             myStudyingClass.put("peopleCount", classStudentCount);

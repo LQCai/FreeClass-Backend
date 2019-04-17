@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,10 +33,10 @@ public class ClassController {
 
         List<Map<String, Object>> myStudyingClassList = classService.getMyStudyingClassList(id);
 
-        ResData res = new ResData();
-        res.put("myTeachingClassList", myTeachingClassList);
-        res.put("myStudyingClassList", myStudyingClassList);
+        Map<String, Object> data = new HashMap<>();
+        data.put("myTeachingClassList", myTeachingClassList);
+        data.put("myStudyingClassList", myStudyingClassList);
 
-        return res;
+        return ResData.ok(data);
     }
 }
