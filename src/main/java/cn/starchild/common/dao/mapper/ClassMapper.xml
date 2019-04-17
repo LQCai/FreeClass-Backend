@@ -20,6 +20,24 @@
         id, name, teacher_id, invitation_code, people_maximum, status, topping, created,
     modified
     </sql>
+    <update id="updateById" parameterType="Class">
+        update t_class
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="peopleMaximum != null">
+                people_maximum = #{peopleMaximum,jdbcType=TINYINT},
+            </if>
+            <if test="topping != null">
+                topping = #{topping,jdbcType=TINYINT},
+            </if>
+            <if test="modified != null">
+                modified = #{modified,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=CHAR}
+    </update>
 
     <select id="selectMyTeachingClassList" resultType="java.util.Map" parameterType="string">
         select u.id   user_id,
@@ -31,6 +49,7 @@
                  left join t_class c
                            on c.teacher_id = u.id
         where u.id = #{id}
+          and c.status != 2
     </select>
     <select id="selectMyStudyingClassList" resultType="java.util.Map" parameterType="string">
         select c.id,
@@ -42,14 +61,29 @@
                  left join t_user u on c.teacher_id = u.id
                  join t_class_student cs on cs.class_id = c.id
         where cs.student_id = #{id}
+          and c.status != 2
     </select>
     <select id="selectCountForId" resultType="java.lang.Integer" parameterType="string">
         select count(id)
         from t_class_student
         where class_id = #{classId}
+          and status != 2
     </select>
     <select id="selectClassCodeList" resultType="java.lang.String">
         select invitation_code
         from t_class
+        where status != 2
+    </select>
+    <select id="validateClass" resultType="cn.starchild.common.model.ClassModel" parameterType="string">
+        select id
+        from t_class
+        where id = #{id}
+          and status != 2;
+    </select>
+    <select id="validateClassByCode" resultType="cn.starchild.common.model.ClassModel" parameterType="string">
+        select id, teacher_id
+        from t_class
+        where invitation_code = #{code}
+          and status != 2;
     </select>
 </mapper>

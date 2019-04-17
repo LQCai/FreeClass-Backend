@@ -135,4 +135,56 @@ public class ClassServiceImpl implements ClassService {
 
         return true;
     }
+
+    @Override
+    public boolean updateClass(JSONObject classData) {
+        String teacherId = classData.getString("teacherId");
+        String className = classData.getString("className");
+        String id = classData.getString("id");
+        byte peopleMaximum = classData.getByte("peopleMaximum");
+        byte topping = classData.getByte("topping");
+
+        ClassModel classModel = new ClassModel();
+        classModel.setTeacherId(teacherId);
+        classModel.setId(id);
+        classModel.setName(className);
+        classModel.setPeopleMaximum(peopleMaximum);
+        classModel.setTopping(topping);
+        classModel.setModified(new Date());
+
+        try {
+            boolean result = classDao.updateById(classModel);
+            if (!result) {
+                return false;
+            }
+        } catch (Exception e) {
+            logger.warning("修改课堂失败:" + e.getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean validateClass(String id) {
+        ClassModel result = classDao.validateClass(id);
+        if (result == null) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean validateClassByCode(String code) {
+        ClassModel result = classDao.validateClassByCode(code);
+        if (result == null) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public ClassModel getClassByCode(String code) {
+        return classDao.validateClassByCode(code);
+    }
 }

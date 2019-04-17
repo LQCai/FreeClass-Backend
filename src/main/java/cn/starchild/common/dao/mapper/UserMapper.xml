@@ -55,21 +55,25 @@
     <select id="getAllUsers" resultType="java.util.Map">
         SELECT *
         FROM t_user
+        where status != 2
     </select>
     <select id="hasUserForOpenId" resultType="String" parameterType="string">
         select id
         from t_user
         where open_id = #{openId}
+          and status != 2
     </select>
     <select id="findOneByOpenId" resultMap="UserResultMap">
         select *
         from t_user
         where open_id = #{openId}
+          and status != 2
     </select>
     <select id="validateUserById" resultType="java.lang.String" parameterType="string">
         select id
         from t_user
         where id = #{id}
+          and status != 2
     </select>
 
 
