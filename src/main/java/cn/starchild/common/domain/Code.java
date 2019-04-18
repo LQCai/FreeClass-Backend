@@ -12,6 +12,7 @@ public final class Code {
     public static final String IS_TEACHER = "1003";//用户存在
 
     public static final String CLASS_JOINED = "1011";//课堂已加入
+    public static final String CLASS_NOT_JOINED = "1012";//未加入课堂
 
 
     // 请求错误

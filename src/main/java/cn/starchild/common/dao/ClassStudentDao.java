@@ -14,4 +14,6 @@ public interface ClassStudentDao extends Mapper<ClassStudentModel> {
     boolean joinClass(ClassStudentModel data);
 
     boolean deleteByClassId(String classId);
+
+    boolean deleteForClassAndStudent(ClassStudentModel classStudent);
 }

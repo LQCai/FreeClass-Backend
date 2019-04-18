@@ -200,22 +200,22 @@ public class ClassController {
      */
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     public ResData deleteClass(@RequestBody String jsonParams) {
-        JSONObject joinData = JSONObject.parseObject(jsonParams).getJSONObject("deleteData");
+        JSONObject deleteData = JSONObject.parseObject(jsonParams).getJSONObject("deleteData");
 
-        if (!joinData.containsKey("userId")) {
+        if (!deleteData.containsKey("userId")) {
             return ResData.error(Code.PARAM_FORMAT_ERROR, "用户id不可为空");
         }
-        if (!joinData.containsKey("classId")) {
+        if (!deleteData.containsKey("classId")) {
             return ResData.error(Code.PARAM_FORMAT_ERROR, "课堂id不可为空");
         }
-        if (!joinData.containsKey("className")) {
+        if (!deleteData.containsKey("className")) {
             return ResData.error(Code.PARAM_FORMAT_ERROR, "课堂名不可为空");
         }
 
         ClassModel classModel = new ClassModel();
-        classModel.setId(joinData.getString("classId"));
-        classModel.setTeacherId(joinData.getString("userId"));
-        classModel.setName(joinData.getString("className"));
+        classModel.setId(deleteData.getString("classId"));
+        classModel.setTeacherId(deleteData.getString("userId"));
+        classModel.setName(deleteData.getString("className"));
 
         // 验证输入确认删除的信息是否正确
         boolean validateClassForDelete = classService.validateClassForDelete(classModel);
@@ -227,6 +227,40 @@ public class ClassController {
         boolean result = classService.deleteClass(classModel.getId());
         if (!result) {
             return ResData.error(Code.DATABASE_DELETE_FAIL, "删除课堂失败");
+        }
+
+        return ResData.ok();
+    }
+
+    /**
+     * 退出课堂
+     * @param jsonParams
+     * @return
+     */
+    @RequestMapping(value = "quit", method = RequestMethod.PUT)
+    public ResData putQuit(@RequestBody String jsonParams) {
+        JSONObject quitData = JSONObject.parseObject(jsonParams).getJSONObject("quitData");
+
+        if (!quitData.containsKey("userId")) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "用户id不可为空");
+        }
+        if (!quitData.containsKey("classId")) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "课堂id不可为空");
+        }
+
+        ClassStudentModel classStudent = new ClassStudentModel();
+        classStudent.setClassId(quitData.getString("classId"));
+        classStudent.setStudentId(quitData.getString("userId"));
+
+        // 验证该用户是否已加入该课堂
+        boolean isJoined = classStudentService.validateJoined(classStudent);
+        if (!isJoined) {
+            return ResData.error(Code.CLASS_NOT_JOINED, "未加入该课堂");
+        }
+
+        boolean quitResult = classStudentService.quitClass(classStudent);
+        if (!quitResult) {
+            return ResData.error(Code.DATABASE_DELETE_FAIL, "退出课堂失败");
         }
 
         return ResData.ok();

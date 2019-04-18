@@ -10,7 +10,8 @@ import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
+
+import org.apache.log4j.Logger;
 
 @Service
 public class ClassStudentServiceImpl implements ClassStudentService {
@@ -18,7 +19,7 @@ public class ClassStudentServiceImpl implements ClassStudentService {
     @Resource
     private ClassStudentDao classStudentDao;
 
-    private Logger logger;
+    private Logger logger = Logger.getLogger(this.getClass());
 
 
     @Override
@@ -34,7 +35,7 @@ public class ClassStudentServiceImpl implements ClassStudentService {
                 return false;
             }
         } catch (Exception e) {
-            logger.warning("加入课堂失败:" + e.getMessage());
+            logger.error("加入课堂失败:" + e.getMessage());
             return false;
         }
 
@@ -49,5 +50,20 @@ public class ClassStudentServiceImpl implements ClassStudentService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean quitClass(ClassStudentModel classStudent) {
+        try {
+            boolean result = classStudentDao.deleteForClassAndStudent(classStudent);
+            if (!result) {
+                return false;
+            }
+        } catch (Exception e) {
+            logger.error("退出课堂失败:" + e.getMessage());
+            return false;
+        }
+
+        return true;
     }
 }
