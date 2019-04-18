@@ -11,6 +11,9 @@ public final class Code {
     public static final String USER_EXIST = "1002";//用户存在
     public static final String IS_TEACHER = "1003";//用户存在
 
+    public static final String CLASS_JOINED = "1011";//课堂已加入
+
+
     // 请求错误
     public static final String PARAM_FORMAT_ERROR = "1201";//请求参数错误
 

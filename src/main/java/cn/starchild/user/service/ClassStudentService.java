@@ -1,8 +1,11 @@
 package cn.starchild.user.service;
 
 
-import java.util.Map;
+import cn.starchild.common.model.ClassStudentModel;
 
 public interface ClassStudentService {
-    boolean joinClass(Map<String, Object> joinData);
+    boolean joinClass(ClassStudentModel classStudent);
+
+    // 判断该用户是否加入该课堂
+    boolean validateJoined(ClassStudentModel classStudentModel);
 }

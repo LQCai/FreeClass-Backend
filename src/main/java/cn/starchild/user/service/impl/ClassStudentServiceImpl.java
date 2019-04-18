@@ -1,7 +1,6 @@
 package cn.starchild.user.service.impl;
 
 import cn.starchild.common.dao.ClassStudentDao;
-import cn.starchild.common.model.ClassModel;
 import cn.starchild.common.model.ClassStudentModel;
 import cn.starchild.common.util.UUIDUtils;
 import cn.starchild.user.service.ClassStudentService;
@@ -23,18 +22,7 @@ public class ClassStudentServiceImpl implements ClassStudentService {
 
 
     @Override
-    public boolean joinClass(Map<String, Object> joinData) {
-        ClassStudentModel classStudent = new ClassStudentModel();
-
-        classStudent.setClassId(joinData.get("classId").toString());
-        classStudent.setStudentId(joinData.get("userId").toString());
-
-        // 判断该用户是否已加入课堂
-        List<Map<String, Object>> classJoinList = classStudentDao.validateJoined(classStudent);
-        if (classJoinList.size() != 0) {
-            return false;
-        }
-
+    public boolean joinClass(ClassStudentModel classStudent) {
         classStudent.setId(UUIDUtils.uuid());
         classStudent.setStatus((byte) 1);
         classStudent.setCreated(new Date());
@@ -51,5 +39,15 @@ public class ClassStudentServiceImpl implements ClassStudentService {
         }
 
         return true;
+    }
+
+    @Override
+    public boolean validateJoined(ClassStudentModel classStudentModel) {
+        // 判断该用户是否已加入课堂
+        List<Map<String, Object>> classJoinList = classStudentDao.validateJoined(classStudentModel);
+        if (classJoinList.size() != 0) {
+            return true;
+        }
+        return false;
     }
 }

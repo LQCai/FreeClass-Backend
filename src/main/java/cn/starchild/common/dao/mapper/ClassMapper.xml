@@ -80,7 +80,7 @@
         where id = #{id}
           and status != 2;
     </select>
-    <select id="validateClassByCode" resultType="cn.starchild.common.model.ClassModel" parameterType="string">
+    <select id="validateClassByCode" resultMap="BaseResultMap" parameterType="string">
         select id, teacher_id
         from t_class
         where invitation_code = #{code}
