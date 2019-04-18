@@ -21,4 +21,8 @@ public interface ClassDao extends Mapper<ClassModel> {
     ClassModel validateClass(String id);
 
     ClassModel validateClassByCode(String code);
+
+    ClassModel validateIsClass(ClassModel classModel);
+
+    boolean deleteById(String id);
 }

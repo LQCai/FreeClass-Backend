@@ -12,4 +12,6 @@ public interface ClassStudentDao extends Mapper<ClassStudentModel> {
     List<Map<String, Object>> validateJoined(ClassStudentModel classStudent);
 
     boolean joinClass(ClassStudentModel data);
+
+    boolean deleteByClassId(String classId);
 }

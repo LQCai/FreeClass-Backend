@@ -8,11 +8,15 @@ import cn.starchild.common.util.RandomUtils;
 import cn.starchild.common.util.UUIDUtils;
 import cn.starchild.user.service.ClassService;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.jta.JtaTransactionManager;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import javax.annotation.Resource;
 import java.util.*;
-import java.util.logging.Logger;
 
 @Service
 public class ClassServiceImpl implements ClassService {
@@ -26,7 +30,7 @@ public class ClassServiceImpl implements ClassService {
     @Resource
     private ClassStudentDao classStudentDao;
 
-    private Logger logger;
+    private Logger logger = Logger.getLogger(this.getClass());
 
     @Override
     public List<Map<String, Object>> getMyTeachingClassList(String id) {
@@ -129,7 +133,7 @@ public class ClassServiceImpl implements ClassService {
         try {
             classDao.insert(classModel);
         } catch (Exception e) {
-            logger.warning("创建班级失败:" + e.getMessage());
+            logger.error("创建班级失败:" + e.getMessage());
             return false;
         }
 
@@ -158,7 +162,7 @@ public class ClassServiceImpl implements ClassService {
                 return false;
             }
         } catch (Exception e) {
-            logger.warning("修改课堂失败:" + e.getMessage());
+            logger.error("修改课堂失败:" + e.getMessage());
             return false;
         }
 
@@ -186,5 +190,32 @@ public class ClassServiceImpl implements ClassService {
     @Override
     public ClassModel getClassByCode(String code) {
         return classDao.validateClassByCode(code);
+    }
+
+    @Override
+    public boolean validateClassForDelete(ClassModel classModel) {
+        ClassModel result = classDao.validateIsClass(classModel);
+        if (result == null) {
+            return false;
+        }
+        return true;
+    }
+
+    @Transactional
+    @Override
+    public boolean deleteClass(String id) {
+        try {
+            boolean cResult = classDao.deleteById(id);
+            boolean csResult = classStudentDao.deleteByClassId(id);
+
+            if (!csResult || !cResult) {
+                return false;
+            }
+        } catch (Exception e) {
+            logger.error("删除课堂失败:" + e.getMessage());
+            return false;
+        }
+
+        return true;
     }
 }

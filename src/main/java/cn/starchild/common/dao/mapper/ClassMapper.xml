@@ -38,6 +38,11 @@
         </set>
         where id = #{id,jdbcType=CHAR}
     </update>
+    <update id="deleteById" parameterType="string">
+        update t_class
+        set status=2
+        where id = #{id}
+    </update>
 
     <select id="selectMyTeachingClassList" resultType="java.util.Map" parameterType="string">
         select u.id   user_id,
@@ -85,5 +90,14 @@
         from t_class
         where invitation_code = #{code}
           and status != 2;
+    </select>
+    <select id="validateIsClass" resultMap="BaseResultMap" parameterType="cn.starchild.common.model.ClassModel">
+        select id,
+               name
+        from t_class
+        where id = #{id}
+          and teacher_id = #{teacherId}
+          and name = #{name}
+          and status != 2
     </select>
 </mapper>

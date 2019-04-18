@@ -20,5 +20,6 @@ public final class Code {
     // db错误
     public static final String DATABASE_INSERT_FAIL = "1101";//数据库插入失败
     public static final String DATABASE_UPDATE_FAIL = "1102";//数据库修改失败
+    public static final String DATABASE_DELETE_FAIL = "1103";//数据库删除失败
 
 }

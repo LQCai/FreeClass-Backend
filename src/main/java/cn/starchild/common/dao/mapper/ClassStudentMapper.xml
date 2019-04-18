@@ -19,6 +19,11 @@
                 #{created,jdbcType=TIMESTAMP},
                 #{modified,jdbcType=TIMESTAMP})
     </insert>
+    <update id="deleteByClassId" parameterType="string">
+        update t_class_student
+        set status=2
+        where class_id = #{classId}
+    </update>
 
     <select id="selectSimpleList" resultType="java.util.Map" parameterType="string">
         select cs.id,
