@@ -3,6 +3,7 @@ package cn.starchild.user.controller;
 import cn.starchild.common.domain.Code;
 import cn.starchild.common.domain.ResData;
 import cn.starchild.common.model.ClassModel;
+import cn.starchild.common.model.ClassStudentModel;
 import cn.starchild.user.service.ClassService;
 import cn.starchild.user.service.ClassStudentService;
 import cn.starchild.user.service.UserService;
@@ -168,19 +169,98 @@ public class ClassController {
             return ResData.error(Code.DATA_NOT_FOUND, "找不到该课堂");
         }
 
-        // 判断是否已经是该课堂教师 TODO 这里还没解决
+        // 判断是否已经是该课堂教师
         if (userId.equals(classInfo.getTeacherId())) {
             return ResData.error(Code.IS_TEACHER, "您已是该课堂教师");
         }
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("userId", userId);
-        data.put("code", code);
-        data.put("classId", classInfo.getId());
+        ClassStudentModel classStudent = new ClassStudentModel();
+        classStudent.setStudentId(userId);
+        classStudent.setClassId(classInfo.getId());
 
-        boolean result = classStudentService.joinClass(data);
+        // 判断用户是否已加入该课堂
+        boolean isJoined = classStudentService.validateJoined(classStudent);
+        if (isJoined) {
+            return ResData.error(Code.CLASS_JOINED, "您已加入该课堂");
+        }
+
+        // 验证插入数据库是否正常
+        boolean result = classStudentService.joinClass(classStudent);
         if (!result) {
             return ResData.error(Code.DATABASE_INSERT_FAIL, "加入课堂失败");
+        }
+
+        return ResData.ok();
+    }
+
+    /**
+     * 删除课堂
+     * @param jsonParams
+     * @return
+     */
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+    public ResData deleteClass(@RequestBody String jsonParams) {
+        JSONObject deleteData = JSONObject.parseObject(jsonParams).getJSONObject("deleteData");
+
+        if (!deleteData.containsKey("userId")) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "用户id不可为空");
+        }
+        if (!deleteData.containsKey("classId")) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "课堂id不可为空");
+        }
+        if (!deleteData.containsKey("className")) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "课堂名不可为空");
+        }
+
+        ClassModel classModel = new ClassModel();
+        classModel.setId(deleteData.getString("classId"));
+        classModel.setTeacherId(deleteData.getString("userId"));
+        classModel.setName(deleteData.getString("className"));
+
+        // 验证输入确认删除的信息是否正确
+        boolean validateClassForDelete = classService.validateClassForDelete(classModel);
+        if (!validateClassForDelete) {
+            return ResData.error(Code.DATA_NOT_FOUND, "输入课堂名错误或其他错误");
+        }
+
+        // 验证删除结果
+        boolean result = classService.deleteClass(classModel.getId());
+        if (!result) {
+            return ResData.error(Code.DATABASE_DELETE_FAIL, "删除课堂失败");
+        }
+
+        return ResData.ok();
+    }
+
+    /**
+     * 退出课堂
+     * @param jsonParams
+     * @return
+     */
+    @RequestMapping(value = "quit", method = RequestMethod.PUT)
+    public ResData putQuit(@RequestBody String jsonParams) {
+        JSONObject quitData = JSONObject.parseObject(jsonParams).getJSONObject("quitData");
+
+        if (!quitData.containsKey("userId")) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "用户id不可为空");
+        }
+        if (!quitData.containsKey("classId")) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "课堂id不可为空");
+        }
+
+        ClassStudentModel classStudent = new ClassStudentModel();
+        classStudent.setClassId(quitData.getString("classId"));
+        classStudent.setStudentId(quitData.getString("userId"));
+
+        // 验证该用户是否已加入该课堂
+        boolean isJoined = classStudentService.validateJoined(classStudent);
+        if (!isJoined) {
+            return ResData.error(Code.CLASS_NOT_JOINED, "未加入该课堂");
+        }
+
+        boolean quitResult = classStudentService.quitClass(classStudent);
+        if (!quitResult) {
+            return ResData.error(Code.DATABASE_DELETE_FAIL, "退出课堂失败");
         }
 
         return ResData.ok();

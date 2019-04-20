@@ -21,4 +21,8 @@ public interface ClassService {
     boolean validateClassByCode(String code);
 
     ClassModel getClassByCode(String code);
+
+    boolean validateClassForDelete(ClassModel classModel);
+
+    boolean deleteClass(String id);
 }
