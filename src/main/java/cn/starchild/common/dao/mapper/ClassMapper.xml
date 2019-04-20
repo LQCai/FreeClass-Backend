@@ -49,16 +49,19 @@
                u.name user_name,
                c.id,
                c.name,
-               c.invitation_code
+               c.invitation_code,
+               c.topping*1 topping
         from t_user u
                  left join t_class c
                            on c.teacher_id = u.id
         where u.id = #{id}
           and c.status != 2
+        order by c.topping asc
     </select>
     <select id="selectMyStudyingClassList" resultType="java.util.Map" parameterType="string">
         select c.id,
                c.name,
+               c.topping*1 topping,
                c.invitation_code,
                cs.id  class_student_id,
                u.name teacher_name
@@ -67,6 +70,7 @@
                  join t_class_student cs on cs.class_id = c.id
         where cs.student_id = #{id}
           and c.status != 2
+        order by c.topping asc
     </select>
     <select id="selectCountForId" resultType="java.lang.Integer" parameterType="string">
         select count(id)

@@ -47,6 +47,7 @@ public class ClassServiceImpl implements ClassService {
             myTeachingClass.put("id", classInfo.get("id"));
             myTeachingClass.put("name", classInfo.get("name"));
             myTeachingClass.put("invitationCode", classInfo.get("invitation_code"));
+            myTeachingClass.put("topping", classInfo.get("topping"));
 
             for (Map<String, Object> classStudentInfo :
                     classStudentList) {
@@ -82,6 +83,7 @@ public class ClassServiceImpl implements ClassService {
             }
             myStudyingClass.put("invitationCode", classInfo.get("invitation_code"));
             myStudyingClass.put("teacherName", classInfo.get("teacher_name"));
+            myStudyingClass.put("topping", classInfo.get("topping"));
 
 
             Integer classStudentCount = classDao.selectCountForId(classInfo.get("id").toString());
@@ -202,12 +204,8 @@ public class ClassServiceImpl implements ClassService {
     @Override
     public boolean deleteClass(String id) {
         try {
-            boolean cResult = classDao.deleteById(id);
-            boolean csResult = classStudentDao.deleteByClassId(id);
-
-            if (!csResult || !cResult) {
-                return false;
-            }
+            classDao.deleteById(id);
+            classStudentDao.deleteByClassId(id);
         } catch (Exception e) {
             logger.error("删除课堂失败:" + e.getMessage());
             return false;
