@@ -17,6 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/user/homework")
 @RestController
@@ -59,7 +61,7 @@ public class HomeworkController {
             return ResData.error(Code.PARAM_FORMAT_ERROR, "teacherId为空");
         }
 
-        if (homeworkName == null) {
+        if (homeworkName == null && homeworkName.equals("")) {
             return ResData.error(Code.PARAM_FORMAT_ERROR, "homeworkName为空");
         }
 
@@ -67,7 +69,7 @@ public class HomeworkController {
             return ResData.error(Code.PARAM_FORMAT_ERROR, "classId为空");
         }
 
-        if (homeworkIntroduction == null) {
+        if (homeworkIntroduction == null && homeworkIntroduction.equals("")) {
             return ResData.error(Code.PARAM_FORMAT_ERROR, "homeworkIntroduction为空");
         }
 
@@ -164,11 +166,11 @@ public class HomeworkController {
         homeWorkModel.setId(id);
         homeWorkModel.setClassId(classId);
 
-        if (homeworkName != null) {
+        if (homeworkName != null && !homeworkName.equals("")) {
             homeWorkModel.setName(homeworkName);
         }
 
-        if (homeworkIntroduction != null) {
+        if (homeworkIntroduction != null && !homeworkIntroduction.equals("")) {
             homeWorkModel.setIntroduction(homeworkIntroduction);
         }
 
@@ -255,6 +257,28 @@ public class HomeworkController {
         }
 
         return ResData.ok();
+    }
+
+
+    /**
+     * 获取作业列表
+     * @param classId
+     * @return
+     */
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public ResData getTeacherList(String classId) {
+        if (classId == null) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "classId为空");
+        }
+
+        boolean isClass = classService.validateClass(classId);
+        if (!isClass) {
+            return ResData.error(Code.DATA_NOT_FOUND, "该课堂不存在");
+        }
+
+        List<Map<String, Object>> homeworkList = homeworkService.getHomeworkList(classId);
+
+        return ResData.ok(homeworkList);
     }
 
 }

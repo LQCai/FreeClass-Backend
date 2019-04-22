@@ -108,6 +108,8 @@
                 <!-- <value>WriteMapNullValue</value> -->
                 <value>QuoteFieldNames</value>
                 <value>WriteDateUseDateFormat</value>
+                <!-- 禁用循环引用 -->
+                <value>DisableCircularReferenceDetect</value>
             </list>
         </property>
     </bean>

@@ -57,5 +57,16 @@
         where id = #{homeworkId}
           and status != 2
     </select>
+    <select id="selectHomeworkList" resultType="java.util.Map" parameterType="string">
+        select id,
+               name,
+               introduction,
+               deadline,
+               annex_url,
+               created
+        from t_homework
+        where class_id = #{classId}
+          and status != 2
+    </select>
 
 </mapper>

@@ -7,6 +7,10 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class HomeworkServiceImpl implements HomeworkService {
@@ -54,5 +58,27 @@ public class HomeworkServiceImpl implements HomeworkService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public List<Map<String, Object>> getHomeworkList(String classId) {
+        List<Map<String, Object>> homeworkList = new ArrayList<>();
+
+        Map<String, Object> homework = new HashMap<>();
+
+        List<Map<String, Object>> resultList = homeWorkDao.selectHomeworkList(classId);
+        for (Map<String, Object> result :
+                resultList) {
+            homework.put("id", result.get("id"));
+            homework.put("name", result.get("name"));
+            homework.put("introduction", result.get("introduction"));
+            homework.put("deadline", result.get("deadline"));
+            homework.put("annexUrl", result.get("annex_url"));
+            homework.put("created", result.get("created"));
+
+            homeworkList.add(homework);
+        }
+
+        return homeworkList;
     }
 }
