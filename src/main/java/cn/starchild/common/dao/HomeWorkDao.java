@@ -8,4 +8,6 @@ public interface HomeWorkDao extends Mapper<HomeWorkModel> {
     boolean updateHomework(HomeWorkModel homeWorkModel);
 
     HomeWorkModel validateHomeworkById(String homeworkId);
+
+    boolean deleteHomework(String id);
 }

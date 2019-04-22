@@ -44,4 +44,15 @@ public class HomeworkServiceImpl implements HomeworkService {
         }
         return true;
     }
+
+    @Override
+    public boolean deleteHomework(String id) {
+        try {
+            homeWorkDao.deleteHomework(id);
+        } catch (Exception e) {
+            logger.error("删除作业失败:" + e.getMessage());
+            return false;
+        }
+        return true;
+    }
 }

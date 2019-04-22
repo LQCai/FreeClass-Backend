@@ -8,6 +8,7 @@ import cn.starchild.common.util.UUIDUtils;
 import cn.starchild.user.service.ClassService;
 import cn.starchild.user.service.HomeworkService;
 import cn.starchild.user.service.UserService;
+import com.alibaba.fastjson.JSONObject;
 import com.sun.istack.internal.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -123,6 +124,7 @@ public class HomeworkController {
 
     /**
      * 更新作业
+     *
      * @param annex
      * @param id
      * @param teacherId
@@ -206,6 +208,50 @@ public class HomeworkController {
         boolean result = homeworkService.updateHomework(homeWorkModel);
         if (!result) {
             return ResData.error(Code.DATABASE_INSERT_FAIL, "发布作业失败!");
+        }
+
+        return ResData.ok();
+    }
+
+    /**
+     * 删除作业
+     * @param jsonParams
+     * @return
+     */
+    @RequestMapping(value = "delete", method = RequestMethod.DELETE)
+    public ResData deleteJob(@RequestBody String jsonParams) {
+        JSONObject classData = JSONObject.parseObject(jsonParams).getJSONObject("deleteData");
+        if (!classData.containsKey("id")) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "作业id为空");
+        }
+
+        if (!classData.containsKey("teacherId")) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "teacherId为空");
+        }
+
+        if (!classData.containsKey("classId")) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "classId为空");
+        }
+
+        String id = classData.getString("id");
+        String classId = classData.getString("classId");
+        String teacherId = classData.getString("teacherId");
+
+        // 验证该课堂是否存在，且是不是该用户创建的
+        boolean isClass = classService.validateClassForTeacher(classId, teacherId);
+        if (!isClass) {
+            return ResData.error(Code.DATA_NOT_FOUND, "该作业不是该教师所创建");
+        }
+
+        // 判断作业是否存在
+        boolean isJob = homeworkService.validateHomework(id);
+        if (!isJob) {
+            return ResData.error(Code.DATA_NOT_FOUND, "该作业不存在");
+        }
+
+        boolean result = homeworkService.deleteHomework(id);
+        if (!result) {
+            return ResData.error(Code.DATABASE_DELETE_FAIL, "删除作业失败");
         }
 
         return ResData.ok();

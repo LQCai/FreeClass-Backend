@@ -8,4 +8,6 @@ public interface HomeworkService {
     boolean updateHomework(HomeWorkModel homeWorkModel);
 
     boolean validateHomework(String homeworkId);
+
+    boolean deleteHomework(String id);
 }

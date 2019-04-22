@@ -46,6 +46,11 @@
         where id = #{id,jdbcType=CHAR}
         and status != 2
     </update>
+    <update id="deleteHomework" parameterType="string">
+        update t_homework
+        set status = 2
+        where id = #{id}
+    </update>
     <select id="validateHomeworkById" resultMap="BaseResultMap" parameterType="string">
         select id
         from t_homework
