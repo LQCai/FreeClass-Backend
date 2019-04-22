@@ -25,4 +25,6 @@ public interface ClassService {
     boolean validateClassForDelete(ClassModel classModel);
 
     boolean deleteClass(String id);
+
+    boolean validateClassForTeacher(String classId, String teacherId);
 }

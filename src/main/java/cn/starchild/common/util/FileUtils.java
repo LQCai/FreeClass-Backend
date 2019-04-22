@@ -1,6 +1,7 @@
 package cn.starchild.common.util;
 
 import java.io.*;
+import java.util.Date;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,8 +16,9 @@ public class FileUtils {
     public final static int FILE_TYPE_TOILET = 3;
     public final static int FILE_TYPE_SKIL_BAG = 4;
     public final static int FILE_TYPE_USER_OPINION = 5;
-//    private static String homeworkAnnex = "/home/lqcai/freeClass/homeworkAnnex";
-    private static String homeworkAnnex = "C://Users/LQCai/freeClass/upload/homeworkAnnex";
+    public static String homeworkAnnex = "/var/lib/tomcat/webapps/upload/freeClass/homeworkAnnex";
+    //    public static String homeworkAnnex = "C://Users/LQCai/freeClass/upload/homeworkAnnex";
+    public final static String HOMEWORK_ANNEX_DOMAIN = "https://www.starchild.cn:8443/upload/freeClass/homeworkAnnex/";
 
     /**
      * 文件名加UUID
@@ -43,18 +45,16 @@ public class FileUtils {
     }
 
 
-
-
     /**
-     * @param file 上传的文件
-     * @param type 存储的位置  FileUtils.
+     * @param file     上传的文件
+     * @param type     存储的位置  FileUtils.
      * @param fileName 上传后的文件名.
      * @return 文件名
      */
     public static String saveFile(MultipartFile file, int type, String fileName) {
         String originalFileName = file.getOriginalFilename();
-        String suffix = originalFileName.substring(originalFileName.lastIndexOf("."),  originalFileName.length());
-        fileName = fileName + suffix;
+        String suffix = originalFileName.substring(originalFileName.lastIndexOf("."), originalFileName.length());
+        fileName = fileName + "_" + RandomUtils.getRandomStr(5) + suffix;
         String uploadPath = null;
         switch (type) {
             case FILE_TYPE_HOMEWORK_ANNEX:
@@ -84,7 +84,7 @@ public class FileUtils {
         }
         try {
             FileInputStream fileInputStream = (FileInputStream) file.getInputStream();
-            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(uploadPath  + File.separator + fileName));
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(uploadPath + File.separator + fileName));
             byte[] bs = new byte[1024];
             int len;
             while ((len = fileInputStream.read(bs)) != -1) {

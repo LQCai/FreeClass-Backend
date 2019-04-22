@@ -15,9 +15,9 @@ public class HomeWorkModel {
 
     private String annexUrl;
 
-    private Boolean status;
+    private byte status;
 
-    private Boolean sendByEmail;
+    private byte sendByEmail;
 
     private Integer fullScore;
 
@@ -67,19 +67,19 @@ public class HomeWorkModel {
         this.annexUrl = annexUrl == null ? null : annexUrl.trim();
     }
 
-    public Boolean getStatus() {
+    public byte getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(byte status) {
         this.status = status;
     }
 
-    public Boolean getSendByEmail() {
+    public byte getSendByEmail() {
         return sendByEmail;
     }
 
-    public void setSendByEmail(Boolean sendByEmail) {
+    public void setSendByEmail(byte sendByEmail) {
         this.sendByEmail = sendByEmail;
     }
 

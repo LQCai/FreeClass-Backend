@@ -213,4 +213,18 @@ public class ClassServiceImpl implements ClassService {
 
         return true;
     }
+
+    @Override
+    public boolean validateClassForTeacher(String classId, String teacherId) {
+        ClassModel classModel = new ClassModel();
+        classModel.setId(classId);
+        classModel.setTeacherId(teacherId);
+
+        ClassModel classInfo = classDao.validateClassForTeacher(classModel);
+        if (classInfo == null) {
+            return false;
+        }
+
+        return true;
+    }
 }

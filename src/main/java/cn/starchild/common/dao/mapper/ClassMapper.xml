@@ -105,4 +105,11 @@
           and name = #{name}
           and status != 2
     </select>
+    <select id="validateClassForTeacher" resultMap="BaseResultMap" parameterType="Class">
+        select id
+        from t_class
+        where id = #{id}
+          and teacher_id = #{teacherId}
+          and status != 2
+    </select>
 </mapper>
