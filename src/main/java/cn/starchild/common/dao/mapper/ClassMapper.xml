@@ -45,12 +45,12 @@
     </update>
 
     <select id="selectMyTeachingClassList" resultType="java.util.Map" parameterType="string">
-        select u.id   user_id,
-               u.name user_name,
+        select u.id          user_id,
+               u.name        user_name,
                c.id,
                c.name,
                c.invitation_code,
-               c.topping*1 topping
+               c.topping * 1 topping
         from t_user u
                  left join t_class c
                            on c.teacher_id = u.id
@@ -61,15 +61,16 @@
     <select id="selectMyStudyingClassList" resultType="java.util.Map" parameterType="string">
         select c.id,
                c.name,
-               c.topping*1 topping,
+               c.topping * 1 topping,
                c.invitation_code,
-               cs.id  class_student_id,
-               u.name teacher_name
+               cs.id         class_student_id,
+               u.name        teacher_name
         from t_class c
                  left join t_user u on c.teacher_id = u.id
                  join t_class_student cs on cs.class_id = c.id
         where cs.student_id = #{id}
           and c.status != 2
+          and cs.status != 2
         order by c.topping asc
     </select>
     <select id="selectCountForId" resultType="java.lang.Integer" parameterType="string">
@@ -102,6 +103,13 @@
         where id = #{id}
           and teacher_id = #{teacherId}
           and name = #{name}
+          and status != 2
+    </select>
+    <select id="validateClassForTeacher" resultMap="BaseResultMap" parameterType="Class">
+        select id
+        from t_class
+        where id = #{id}
+          and teacher_id = #{teacherId}
           and status != 2
     </select>
 </mapper>
