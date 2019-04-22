@@ -1,22 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.starchild.common.dao.HomeWorkDao">
-  <resultMap id="BaseResultMap" type="cn.starchild.common.model.HomeWorkModel">
-    <id column="id" jdbcType="CHAR" property="id" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="class_id" jdbcType="CHAR" property="classId" />
-    <result column="introduction" jdbcType="VARCHAR" property="introduction" />
-    <result column="annex_url" jdbcType="VARCHAR" property="annexUrl" />
-    <result column="status" jdbcType="BIT" property="status" />
-    <result column="send_by_email" jdbcType="BIT" property="sendByEmail" />
-    <result column="full_score" jdbcType="INTEGER" property="fullScore" />
-    <result column="deadline" jdbcType="TIMESTAMP" property="deadline" />
-    <result column="created" jdbcType="TIMESTAMP" property="created" />
-    <result column="modified" jdbcType="TIMESTAMP" property="modified" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, name, class_id, introduction, annex_url, status, send_by_email, full_score, deadline, 
+    <resultMap id="BaseResultMap" type="cn.starchild.common.model.HomeWorkModel">
+        <id column="id" jdbcType="CHAR" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="class_id" jdbcType="CHAR" property="classId"/>
+        <result column="introduction" jdbcType="VARCHAR" property="introduction"/>
+        <result column="annex_url" jdbcType="VARCHAR" property="annexUrl"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="send_by_email" jdbcType="TINYINT" property="sendByEmail"/>
+        <result column="full_score" jdbcType="INTEGER" property="fullScore"/>
+        <result column="deadline" jdbcType="TIMESTAMP" property="deadline"/>
+        <result column="created" jdbcType="TIMESTAMP" property="created"/>
+        <result column="modified" jdbcType="TIMESTAMP" property="modified"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, name, class_id, introduction, annex_url, status, send_by_email, full_score, deadline,
     created, modified
-  </sql>
+    </sql>
+    <update id="updateHomework" parameterType="Homework">
+        update t_homework
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="introduction != null">
+                introduction = #{introduction,jdbcType=VARCHAR},
+            </if>
+            <if test="annexUrl != null">
+                annex_url = #{annexUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="sendByEmail != null">
+                send_by_email = #{sendByEmail,jdbcType=TINYINT},
+            </if>
+            <if test="fullScore != null">
+                full_score = #{fullScore,jdbcType=TINYINT},
+            </if>
+            <if test="deadline != null">
+                deadline = #{deadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modified != null">
+                modified = #{modified,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=CHAR}
+        and status != 2
+    </update>
+    <select id="validateHomeworkById" resultMap="BaseResultMap" parameterType="string">
+        select id
+        from t_homework
+        where id = #{homeworkId}
+          and status != 2
+    </select>
 
 </mapper>

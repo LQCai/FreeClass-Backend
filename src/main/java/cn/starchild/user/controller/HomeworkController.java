@@ -32,6 +32,7 @@ public class HomeworkController {
 
     /**
      * 发布作业
+     *
      * @param annex
      * @param teacherId
      * @param homeworkName
@@ -82,7 +83,7 @@ public class HomeworkController {
         }
 
         if (sendByEmail != 1 && sendByEmail != 2) {
-            return ResData.error(Code.PARAM_FORMAT_ERROR,"是否发送邮件格式错误");
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "是否发送邮件格式错误");
         }
 
         // 验证该课堂是否存在，且是不是该用户创建的
@@ -91,15 +92,19 @@ public class HomeworkController {
             return ResData.error(Code.DATA_NOT_FOUND, "找不到该教师的课堂");
         }
 
+        if (annex == null) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "附件未上传");
+        }
+
         String uploadName = annex.getOriginalFilename().substring(0, annex.getOriginalFilename().lastIndexOf("."));
-        String annexUrl = FileUtils.saveFile(annex, 0, uploadName);
+        String annexUrl = FileUtils.HOMEWORK_ANNEX_DOMAIN + FileUtils.saveFile(annex, 0, uploadName);
 
         HomeWorkModel homeWorkModel = new HomeWorkModel();
         homeWorkModel.setId(UUIDUtils.uuid());
         homeWorkModel.setName(homeworkName);
         homeWorkModel.setClassId(classId);
         homeWorkModel.setIntroduction(homeworkIntroduction);
-        homeWorkModel.setAnnexUrl(FileUtils.HOMEWORK_ANNEX_DOMAIN + annexUrl);
+        homeWorkModel.setAnnexUrl(annexUrl);
         homeWorkModel.setStatus((byte) 1);
         homeWorkModel.setSendByEmail(sendByEmail.byteValue());
         homeWorkModel.setFullScore(fullScore);
@@ -114,4 +119,96 @@ public class HomeworkController {
 
         return ResData.ok();
     }
+
+
+    /**
+     * 更新作业
+     * @param annex
+     * @param id
+     * @param teacherId
+     * @param homeworkName
+     * @param classId
+     * @param homeworkIntroduction
+     * @param sendByEmail
+     * @param fullScore
+     * @param deadline
+     * @return
+     */
+    @RequestMapping(value = "edit", method = RequestMethod.POST)
+    public ResData putJob(MultipartFile annex,
+                          @NotNull String id,
+                          @NotNull String teacherId,
+                          @NotNull String homeworkName,
+                          @NotNull String classId,
+                          @NotNull String homeworkIntroduction,
+                          @NotNull Integer sendByEmail,
+                          @NotNull Integer fullScore,
+                          @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date deadline) {
+
+        HomeWorkModel homeWorkModel = new HomeWorkModel();
+
+        if (id == null) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "作业id为空");
+        }
+
+        if (teacherId == null) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "teacherId为空");
+        }
+
+        if (classId == null) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "classId为空");
+        }
+
+        homeWorkModel.setId(id);
+        homeWorkModel.setClassId(classId);
+
+        if (homeworkName != null) {
+            homeWorkModel.setName(homeworkName);
+        }
+
+        if (homeworkIntroduction != null) {
+            homeWorkModel.setIntroduction(homeworkIntroduction);
+        }
+
+        if (sendByEmail != null) {
+            if (sendByEmail != 1 && sendByEmail != 2) {
+                return ResData.error(Code.PARAM_FORMAT_ERROR, "是否发送邮件格式错误");
+            }
+            homeWorkModel.setSendByEmail(sendByEmail.byteValue());
+        }
+
+        if (fullScore != null) {
+            homeWorkModel.setFullScore(fullScore);
+        }
+
+        if (deadline != null) {
+            homeWorkModel.setDeadline(deadline);
+        }
+
+        // 验证该课堂是否存在，且是不是该用户创建的
+        boolean isClass = classService.validateClassForTeacher(classId, teacherId);
+        if (!isClass) {
+            return ResData.error(Code.DATA_NOT_FOUND, "找不到该教师的课堂");
+        }
+
+        // 判断作业是否存在
+        boolean isHomework = homeworkService.validateHomework(id);
+        if (!isHomework) {
+            return ResData.error(Code.DATA_NOT_FOUND, "该作业不存在");
+        }
+
+        if (annex != null) {
+            String uploadName = annex.getOriginalFilename().substring(0, annex.getOriginalFilename().lastIndexOf("."));
+            String annexUrl = FileUtils.HOMEWORK_ANNEX_DOMAIN + FileUtils.saveFile(annex, 0, uploadName);
+            homeWorkModel.setAnnexUrl(annexUrl);
+        }
+
+        boolean result = homeworkService.updateHomework(homeWorkModel);
+        if (!result) {
+            return ResData.error(Code.DATABASE_INSERT_FAIL, "发布作业失败!");
+        }
+
+        return ResData.ok();
+    }
+
 }

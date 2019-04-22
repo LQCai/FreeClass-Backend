@@ -1,8 +1,11 @@
 package cn.starchild.common.model;
 
+import org.apache.ibatis.type.Alias;
+
 import javax.persistence.Table;
 import java.util.Date;
 
+@Alias("Homework")
 @Table(name = "t_homework")
 public class HomeWorkModel {
     private String id;

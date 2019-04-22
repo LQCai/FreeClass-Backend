@@ -25,4 +25,23 @@ public class HomeworkServiceImpl implements HomeworkService {
         }
         return true;
     }
+
+    @Override
+    public boolean updateHomework(HomeWorkModel homeWorkModel) {
+        boolean result = homeWorkDao.updateHomework(homeWorkModel);
+
+        if (!result) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean validateHomework(String homeworkId) {
+        HomeWorkModel result = homeWorkDao.validateHomeworkById(homeworkId);
+        if (result == null) {
+            return false;
+        }
+        return true;
+    }
 }
