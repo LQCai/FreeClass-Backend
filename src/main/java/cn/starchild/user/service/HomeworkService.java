@@ -17,7 +17,7 @@ public interface HomeworkService {
 
     List<Map<String, Object>> getHomeworkList(String classId);
 
-    List<Map<String, Object>> getStudentHomeworkList(String classId);
+    List<Map<String, Object>> getStudentHomeworkList(String classId, String homeworkId);
 
     HomeWorkModel getHomeworkInfo(String homeworkId);
 

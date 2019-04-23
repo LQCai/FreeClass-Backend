@@ -93,8 +93,36 @@ public class HomeworkServiceImpl implements HomeworkService {
     }
 
     @Override
-    public List<Map<String, Object>> getStudentHomeworkList(String classId) {
-        return classStudentDao.selectStudentList(classId);
+    public List<Map<String, Object>> getStudentHomeworkList(String classId, String homeworkId) {
+        List<Map<String, Object>> studentList = classStudentDao.selectStudentList(classId);
+        List<Map<String, Object>> submitHomeworkList = homeworkSubmitDao.selectSubmitList(homeworkId);
+
+        List<Map<String, Object>> studentHomeworkList = new ArrayList<>();
+
+        for (Map<String, Object> student:
+             studentList) {
+            Map<String, Object> studentHomework = new HashMap<>();
+
+            studentHomework.put("studentId", student.get("id"));
+            studentHomework.put("studentName", student.get("name"));
+            studentHomework.put("studentCode", student.get("serial_code"));
+            studentHomework.put("status", 2);
+
+            // 匹配提交记录中与学生id相同的记录，获取已提交作业的学生记录
+            for (Map<String, Object> submitRecord:
+                 submitHomeworkList) {
+                if (submitRecord.get("student_id").equals(student.get("id"))) {
+                    studentHomework.put("status", 1);
+                    studentHomework.put("content", submitRecord.get("content"));
+                    studentHomework.put("annexUrl", submitRecord.get("annex_url"));
+                    studentHomework.put("created", submitRecord.get("created"));
+                }
+            }
+
+            studentHomeworkList.add(studentHomework);
+        }
+
+        return studentHomeworkList;
     }
 
     @Override

@@ -21,5 +21,15 @@
           and student_id = #{studentId}
           and status != 2
     </select>
+    <select id="selectSubmitList" resultType="java.util.Map" parameterType="string">
+        select id,
+               student_id,
+               content,
+               annex_url,
+               created
+        from t_homework_submit
+        where homework_id = #{homeworkId}
+          and status != 2
+    </select>
 
 </mapper>

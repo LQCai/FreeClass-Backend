@@ -293,10 +293,9 @@ public class HomeworkController {
      * @return
      */
     @RequestMapping(value = "studentList", method = RequestMethod.GET)
-    public ResData getStudentJobList(String classId) {
-        List<Map<String, Object>> studentJobList = homeworkService.getStudentHomeworkList(classId);
+    public ResData getStudentJobList(String classId, String homeworkId) {
+        List<Map<String, Object>> studentJobList = homeworkService.getStudentHomeworkList(classId, homeworkId);
 
-        // TODO
         return ResData.ok(studentJobList);
     }
 
