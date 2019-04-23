@@ -14,6 +14,8 @@ public final class Code {
     public static final String CLASS_JOINED = "1011";//课堂已加入
     public static final String CLASS_NOT_JOINED = "1012";//未加入课堂
 
+    public static final String JOB_SUBMITTED = "1021";//作业已提交
+
 
     // 请求错误
     public static final String PARAM_FORMAT_ERROR = "1201";//请求参数错误

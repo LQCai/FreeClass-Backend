@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.starchild.common.dao.HomeworkSubmitDao">
-  <resultMap id="BaseResultMap" type="cn.starchild.common.model.HomeworkSubmitModel">
-    <id column="id" jdbcType="CHAR" property="id" />
-    <result column="homework_id" jdbcType="CHAR" property="homeworkId" />
-    <result column="student_id" jdbcType="CHAR" property="studentId" />
-    <result column="status" jdbcType="BIT" property="status" />
-    <result column="created" jdbcType="TIMESTAMP" property="created" />
-    <result column="modified" jdbcType="TIMESTAMP" property="modified" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, homework_id, student_id, status, created, modified
-  </sql>
+    <resultMap id="BaseResultMap" type="cn.starchild.common.model.HomeworkSubmitModel">
+        <id column="id" jdbcType="CHAR" property="id"/>
+        <result column="homework_id" jdbcType="CHAR" property="homeworkId"/>
+        <result column="student_id" jdbcType="CHAR" property="studentId"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="annex_url" jdbcType="VARCHAR" property="annexUrl"/>
+        <result column="created" jdbcType="TIMESTAMP" property="created"/>
+        <result column="modified" jdbcType="TIMESTAMP" property="modified"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, homework_id, student_id, content, annex_url, status, created, modified
+    </sql>
+    <select id="selectSubmitRecord" resultMap="BaseResultMap" parameterType="HomeworkSubmitModel">
+        select id
+        from t_homework_submit
+        where homework_id = #{homeworkId}
+          and student_id = #{studentId}
+          and status != 2
+    </select>
 
 </mapper>

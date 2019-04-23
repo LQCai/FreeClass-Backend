@@ -11,7 +11,11 @@ public class HomeworkSubmitModel {
 
     private String studentId;
 
-    private Boolean status;
+    private byte status;
+
+    private String content;
+
+    private String annexUrl;
 
     private Date created;
 
@@ -41,11 +45,11 @@ public class HomeworkSubmitModel {
         this.studentId = studentId == null ? null : studentId.trim();
     }
 
-    public Boolean getStatus() {
+    public byte getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(byte status) {
         this.status = status;
     }
 
@@ -63,5 +67,21 @@ public class HomeworkSubmitModel {
 
     public void setModified(Date modified) {
         this.modified = modified;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getAnnexUrl() {
+        return annexUrl;
+    }
+
+    public void setAnnexUrl(String annexUrl) {
+        this.annexUrl = annexUrl;
     }
 }

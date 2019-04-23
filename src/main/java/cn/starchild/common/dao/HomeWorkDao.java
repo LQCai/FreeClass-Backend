@@ -15,4 +15,6 @@ public interface HomeWorkDao extends Mapper<HomeWorkModel> {
     boolean deleteHomework(String id);
 
     List<Map<String, Object>> selectHomeworkList(String classId);
+
+    HomeWorkModel selectHomework(String homeworkId);
 }

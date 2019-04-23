@@ -1,7 +1,11 @@
 package cn.starchild.user.service.impl;
 
+import cn.starchild.common.dao.ClassStudentDao;
 import cn.starchild.common.dao.HomeWorkDao;
+import cn.starchild.common.dao.HomeworkSubmitDao;
 import cn.starchild.common.model.HomeWorkModel;
+import cn.starchild.common.model.HomeworkSubmitModel;
+import cn.starchild.user.service.ClassStudentService;
 import cn.starchild.user.service.HomeworkService;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -16,6 +20,12 @@ import java.util.Map;
 public class HomeworkServiceImpl implements HomeworkService {
     @Resource
     private HomeWorkDao homeWorkDao;
+
+    @Resource
+    private ClassStudentDao classStudentDao;
+
+    @Resource
+    private HomeworkSubmitDao homeworkSubmitDao;
 
     private Logger logger = Logger.getLogger(this.getClass());
 
@@ -80,5 +90,39 @@ public class HomeworkServiceImpl implements HomeworkService {
         }
 
         return homeworkList;
+    }
+
+    @Override
+    public List<Map<String, Object>> getStudentHomeworkList(String classId) {
+        return classStudentDao.selectStudentList(classId);
+    }
+
+    @Override
+    public HomeWorkModel getHomeworkInfo(String homeworkId) {
+        return homeWorkDao.selectHomework(homeworkId);
+    }
+
+    @Override
+    public boolean submitHomework(HomeworkSubmitModel homeworkSubmitModel) {
+        try {
+            homeworkSubmitDao.insert(homeworkSubmitModel);
+        } catch (Exception e) {
+            logger.error("提交作业失败:" + e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean validateSubmitted(String studentId, String homeworkId) {
+        HomeworkSubmitModel homeworkSubmitModel = new HomeworkSubmitModel();
+        homeworkSubmitModel.setHomeworkId(homeworkId);
+        homeworkSubmitModel.setStudentId(studentId);
+
+        HomeworkSubmitModel homeworkSubmit = homeworkSubmitDao.selectSubmitRecord(homeworkSubmitModel);
+        if (homeworkSubmit == null) {
+            return false;
+        }
+        return true;
     }
 }

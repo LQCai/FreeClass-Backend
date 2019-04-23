@@ -68,5 +68,12 @@
         where class_id = #{classId}
           and status != 2
     </select>
+    <select id="selectHomework" resultMap="BaseResultMap" parameterType="string">
+        select id,
+               name
+        from t_homework
+        where id = #{homeworkId}
+          and status != 2
+    </select>
 
 </mapper>
