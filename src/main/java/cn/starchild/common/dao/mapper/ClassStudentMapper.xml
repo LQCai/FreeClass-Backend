@@ -45,6 +45,8 @@
                  join t_class_student cs
                       on c.id = cs.class_id
         where c.teacher_id = #{id}
+          and cs.status != 2
+          and c.status != 2
     </select>
     <select id="validateJoined" resultType="java.util.Map" parameterType="ClassStudent">
         select id
