@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.starchild.common.dao.AttendanceRecordDao">
-  <resultMap id="BaseResultMap" type="cn.starchild.common.model.AttendanceRecordModel">
-    <id column="id" jdbcType="CHAR" property="id" />
-    <result column="attendance_id" jdbcType="CHAR" property="attendanceId" />
-    <result column="student_id" jdbcType="CHAR" property="studentId" />
-    <result column="status" jdbcType="BIT" property="status" />
-    <result column="created" jdbcType="TIMESTAMP" property="created" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, attendance_id, student_id, status, created
-  </sql>
+    <resultMap id="BaseResultMap" type="cn.starchild.common.model.AttendanceRecordModel">
+        <id column="id" jdbcType="CHAR" property="id"/>
+        <result column="attendance_id" jdbcType="CHAR" property="attendanceId"/>
+        <result column="student_id" jdbcType="CHAR" property="studentId"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="created" jdbcType="TIMESTAMP" property="created"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, attendance_id, student_id, status, created
+    </sql>
+    <select id="selectByIdAndStudentId" resultMap="BaseResultMap" parameterType="AttendanceRecordModel">
+        select id,
+               status
+        from t_attendance_record
+        where attendance_id = #{attendanceId}
+          and student_id = #{studentId}
+          and status = 1
+    </select>
 
 </mapper>

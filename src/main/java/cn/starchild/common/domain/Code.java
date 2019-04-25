@@ -18,6 +18,7 @@ public final class Code {
 
 
     public static final String ATTENDANCE_STARTING = "1031";//考勤进行中
+    public static final String CHECKED = "1032";//已签到
 
 
     // 请求错误

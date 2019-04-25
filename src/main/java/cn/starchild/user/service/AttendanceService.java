@@ -14,4 +14,8 @@ public interface AttendanceService {
     boolean validateIsStarting(String attendanceId);
 
     boolean stopStartingAttendance(String attendanceId);
+
+    boolean validateHasChecked(String attendanceId, String studentId);
+
+    boolean checkIn(String attendanceId, String studentId);
 }

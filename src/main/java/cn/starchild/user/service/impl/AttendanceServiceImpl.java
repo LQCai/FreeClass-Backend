@@ -2,8 +2,10 @@ package cn.starchild.user.service.impl;
 
 import cn.starchild.common.dao.AttendanceDao;
 import cn.starchild.common.dao.AttendanceDigtalDao;
+import cn.starchild.common.dao.AttendanceRecordDao;
 import cn.starchild.common.model.AttendanceDigtalModel;
 import cn.starchild.common.model.AttendanceModel;
+import cn.starchild.common.model.AttendanceRecordModel;
 import cn.starchild.common.util.DateUtils;
 import cn.starchild.common.util.RandomUtils;
 import cn.starchild.common.util.UUIDUtils;
@@ -25,6 +27,8 @@ public class AttendanceServiceImpl implements AttendanceService {
     private AttendanceDao attendanceDao;
     @Resource
     private AttendanceDigtalDao attendanceDigtalDao;
+    @Resource
+    private AttendanceRecordDao attendanceRecordDao;
 
     private Logger logger = Logger.getLogger(this.getClass());
 
@@ -133,6 +137,40 @@ public class AttendanceServiceImpl implements AttendanceService {
             attendanceDao.stopAttendance(stopAttendanceModal);
         } catch (Exception e) {
             logger.error("停止考勤失败:" + e.getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean validateHasChecked(String attendanceId, String studentId) {
+        AttendanceRecordModel attendanceRecordModel = new AttendanceRecordModel();
+        attendanceRecordModel.setAttendanceId(attendanceId);
+        attendanceRecordModel.setStudentId(studentId);
+
+        AttendanceRecordModel attendanceRecord = attendanceRecordDao.selectByIdAndStudentId(attendanceRecordModel);
+        if (attendanceRecord == null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean checkIn(String attendanceId, String studentId) {
+        AttendanceRecordModel attendanceRecordModel = new AttendanceRecordModel();
+
+        attendanceRecordModel.setId(UUIDUtils.uuid());
+        attendanceRecordModel.setCreated(new Date());
+        attendanceRecordModel.setStatus((byte) 1);
+        attendanceRecordModel.setAttendanceId(attendanceId);
+        attendanceRecordModel.setStudentId(studentId);
+
+        try {
+            attendanceRecordDao.insert(attendanceRecordModel);
+        } catch (Exception e) {
+            logger.error("签到失败：" + e.getMessage());
             return false;
         }
 
