@@ -213,6 +213,8 @@ public class HomeworkController {
             homeWorkModel.setAnnexUrl(annexUrl);
         }
 
+        homeWorkModel.setModified(new Date());
+
         boolean result = homeworkService.updateHomework(homeWorkModel);
         if (!result) {
             return ResData.error(Code.DATABASE_INSERT_FAIL, "发布作业失败!");
@@ -223,6 +225,7 @@ public class HomeworkController {
 
     /**
      * 删除作业
+     *
      * @param jsonParams
      * @return
      */
@@ -268,6 +271,7 @@ public class HomeworkController {
 
     /**
      * 获取作业列表
+     *
      * @param classId
      * @return
      */
@@ -290,6 +294,7 @@ public class HomeworkController {
 
     /**
      * 获取学生提交作业列表
+     *
      * @return
      */
     @RequestMapping(value = "studentList", method = RequestMethod.GET)
@@ -301,6 +306,7 @@ public class HomeworkController {
 
     /**
      * 提交作业
+     *
      * @param studentId
      * @param classId
      * @param homeworkId
@@ -373,6 +379,24 @@ public class HomeworkController {
         }
 
         return ResData.ok();
+    }
+
+    /**
+     * 获取作业提交状态及提交信息
+     * @param studentId
+     * @param homeworkId
+     * @return
+     */
+    @RequestMapping(value = "submitStatus", method = RequestMethod.GET)
+    public ResData getSubmitStatus(String studentId,
+                                   String homeworkId) {
+        HomeworkSubmitModel homeworkSubmitModel = new HomeworkSubmitModel();
+        homeworkSubmitModel.setStudentId(studentId);
+        homeworkSubmitModel.setHomeworkId(homeworkId);
+
+        Map<String, Object> submittedInfo = homeworkService.getSubmittedInfo(studentId, homeworkId);
+
+        return ResData.ok(submittedInfo);
     }
 
 }

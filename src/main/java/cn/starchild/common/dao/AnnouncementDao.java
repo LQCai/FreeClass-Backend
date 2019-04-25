@@ -4,4 +4,7 @@ import cn.starchild.common.model.AnnouncementModel;
 import tk.mybatis.mapper.common.Mapper;
 
 public interface AnnouncementDao extends Mapper<AnnouncementModel> {
+    AnnouncementModel selectAnnounceById(String id);
+
+    boolean updateAnnounce(AnnouncementModel announcement);
 }

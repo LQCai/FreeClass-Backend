@@ -15,7 +15,7 @@
         id, homework_id, student_id, content, annex_url, status, created, modified
     </sql>
     <select id="selectSubmitRecord" resultMap="BaseResultMap" parameterType="HomeworkSubmitModel">
-        select id
+        select id,content,annex_url
         from t_homework_submit
         where homework_id = #{homeworkId}
           and student_id = #{studentId}

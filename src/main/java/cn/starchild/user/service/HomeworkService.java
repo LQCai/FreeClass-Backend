@@ -24,4 +24,6 @@ public interface HomeworkService {
     boolean submitHomework(HomeworkSubmitModel homeworkSubmitModel);
 
     boolean validateSubmitted(String studentId, String homeworkId);
+
+    Map<String, Object> getSubmittedInfo(String studentId, String homeworkId);
 }

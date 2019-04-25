@@ -5,7 +5,6 @@ import cn.starchild.common.dao.HomeWorkDao;
 import cn.starchild.common.dao.HomeworkSubmitDao;
 import cn.starchild.common.model.HomeWorkModel;
 import cn.starchild.common.model.HomeworkSubmitModel;
-import cn.starchild.user.service.ClassStudentService;
 import cn.starchild.user.service.HomeworkService;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -74,11 +73,11 @@ public class HomeworkServiceImpl implements HomeworkService {
     public List<Map<String, Object>> getHomeworkList(String classId) {
         List<Map<String, Object>> homeworkList = new ArrayList<>();
 
-        Map<String, Object> homework = new HashMap<>();
-
         List<Map<String, Object>> resultList = homeWorkDao.selectHomeworkList(classId);
         for (Map<String, Object> result :
                 resultList) {
+
+            Map<String, Object> homework = new HashMap<>();
             homework.put("id", result.get("id"));
             homework.put("name", result.get("name"));
             homework.put("introduction", result.get("introduction"));
@@ -152,5 +151,27 @@ public class HomeworkServiceImpl implements HomeworkService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public Map<String, Object> getSubmittedInfo(String studentId, String homeworkId) {
+        HomeworkSubmitModel homeworkSubmitModel = new HomeworkSubmitModel();
+        homeworkSubmitModel.setHomeworkId(homeworkId);
+        homeworkSubmitModel.setStudentId(studentId);
+
+        HomeworkSubmitModel homeworkSubmit = homeworkSubmitDao.selectSubmitRecord(homeworkSubmitModel);
+
+        Map<String, Object> homeworkSubmitInfo = new HashMap<>();
+
+        if (homeworkSubmit == null) {
+            homeworkSubmitInfo.put("status", 2);
+        }else {
+            homeworkSubmitInfo.put("status", 1);
+            homeworkSubmitInfo.put("content", homeworkSubmit.getContent());
+            homeworkSubmitInfo.put("annexUrl", homeworkSubmit.getAnnexUrl());
+            homeworkSubmitInfo.put("id", homeworkSubmit.getId());
+        }
+
+        return  homeworkSubmitInfo;
     }
 }

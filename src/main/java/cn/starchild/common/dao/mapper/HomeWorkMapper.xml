@@ -40,7 +40,7 @@
                 deadline = #{deadline,jdbcType=TIMESTAMP},
             </if>
             <if test="modified != null">
-                modified = #{modified,jdbcType=TINYINT},
+                modified = #{modified,jdbcType=TIMESTAMP},
             </if>
         </set>
         where id = #{id,jdbcType=CHAR}

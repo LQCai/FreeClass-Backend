@@ -11,9 +11,9 @@ public class AnnouncementModel {
 
     private String annexUrl;
 
-    private Boolean topping;
+    private byte topping;
 
-    private Boolean status;
+    private byte status;
 
     private Date created;
 
@@ -45,19 +45,19 @@ public class AnnouncementModel {
         this.annexUrl = annexUrl == null ? null : annexUrl.trim();
     }
 
-    public Boolean getTopping() {
+    public byte getTopping() {
         return topping;
     }
 
-    public void setTopping(Boolean topping) {
+    public void setTopping(byte topping) {
         this.topping = topping;
     }
 
-    public Boolean getStatus() {
+    public byte getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(byte status) {
         this.status = status;
     }
 
