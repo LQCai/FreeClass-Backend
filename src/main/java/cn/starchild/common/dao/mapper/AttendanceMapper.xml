@@ -1,17 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.starchild.common.dao.AttendanceDao">
-  <resultMap id="BaseResultMap" type="cn.starchild.common.model.AttendanceModel">
-    <id column="id" jdbcType="CHAR" property="id" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="class_id" jdbcType="CHAR" property="classId" />
-    <result column="type" jdbcType="BIT" property="type" />
-    <result column="status" jdbcType="BIT" property="status" />
-    <result column="created" jdbcType="TIMESTAMP" property="created" />
-    <result column="modified" jdbcType="TIMESTAMP" property="modified" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, name, class_id, type, status, created, modified
-  </sql>
+    <resultMap id="BaseResultMap" type="cn.starchild.common.model.AttendanceModel">
+        <id column="id" jdbcType="CHAR" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="class_id" jdbcType="CHAR" property="classId"/>
+        <result column="type" jdbcType="BIT" property="type"/>
+        <result column="status" jdbcType="BIT" property="status"/>
+        <result column="created" jdbcType="TIMESTAMP" property="created"/>
+        <result column="modified" jdbcType="TIMESTAMP" property="modified"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, name, class_id, type, status, created, modified
+    </sql>
+    <update id="stopAttendance" parameterType="AttendanceModel">
+        update t_attendance
+        set status   = #{status},
+            modified = #{modified}
+        where id = #{id}
+          and status != 2
+    </update>
+    <select id="selectAttendanceInfo" resultType="java.util.Map" parameterType="string">
+        select a.id,
+               a.type * 1   type,
+               ad.code,
+               a.status * 1 status
+        from t_attendance a
+                 left join t_attendance_digtal ad on a.id = ad.attendance_id
+        where a.id = #{attendanceId}
+          and a.status != 2
+    </select>
+    <select id="selectNormalAttendanceList" resultType="java.util.Map" parameterType="string">
+        select id,
+               name
+        from t_attendance
+        where class_id = #{classId}
+          and status = 1
+    </select>
+    <select id="selectStartingAttendanceList" resultType="java.util.Map">
+        select id,
+               status*1 status,
+               modified
+        from t_attendance
+        where status = 1
+    </select>
 
 </mapper>

@@ -535,4 +535,11 @@ public abstract class DateUtils {
         return cal.getTime();
     }
 
+    public static int MinuteDifference(Date oldDate, Date newDate) {
+        long oldTime = oldDate.getTime();
+        long newTime = newDate.getTime();
+
+        return (int) ((newTime - oldTime) / (1000 * 60));
+    }
+
 }

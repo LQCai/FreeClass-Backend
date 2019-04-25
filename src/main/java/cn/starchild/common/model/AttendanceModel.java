@@ -11,9 +11,9 @@ public class AttendanceModel {
 
     private String classId;
 
-    private Boolean type;
+    private byte type;
 
-    private Boolean status;
+    private byte status;
 
     private Date created;
 
@@ -43,19 +43,19 @@ public class AttendanceModel {
         this.classId = classId == null ? null : classId.trim();
     }
 
-    public Boolean getType() {
+    public byte getType() {
         return type;
     }
 
-    public void setType(Boolean type) {
+    public void setType(byte type) {
         this.type = type;
     }
 
-    public Boolean getStatus() {
+    public byte getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(byte status) {
         this.status = status;
     }
 
