@@ -3,6 +3,7 @@
 <mapper namespace="cn.starchild.common.dao.AnnouncementDao">
     <resultMap id="BaseResultMap" type="cn.starchild.common.model.AnnouncementModel">
         <id column="id" jdbcType="CHAR" property="id"/>
+        <id column="class_id" jdbcType="CHAR" property="classId"/>
         <result column="title" jdbcType="VARCHAR" property="title"/>
         <result column="annex_url" jdbcType="VARCHAR" property="annexUrl"/>
         <result column="topping" jdbcType="TINYINT" property="topping"/>
@@ -14,10 +15,7 @@
         <result column="content" jdbcType="LONGVARCHAR" property="content"/>
     </resultMap>
     <sql id="Base_Column_List">
-        id, title, annex_url, topping, status, created, modified
-    </sql>
-    <sql id="Blob_Column_List">
-        content
+        id, class_id, title,content, annex_url, topping, status, created, modified
     </sql>
     <update id="updateAnnounce">
         update t_announcement
@@ -51,6 +49,16 @@
         select id, title
         from t_announcement
         where id = #{id}
+          and status != 2
+    </select>
+    <select id="selectAnnounceList" resultType="java.util.Map" parameterType="string">
+        select id,
+               title,
+               content,
+               annex_url,
+               created
+        from t_announcement
+        where class_id = #{classId}
           and status != 2
     </select>
 </mapper>

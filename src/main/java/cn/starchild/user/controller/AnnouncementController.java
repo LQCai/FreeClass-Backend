@@ -69,6 +69,7 @@ public class AnnouncementController {
 
         AnnouncementModel announcement = new AnnouncementModel();
         announcement.setId(UUIDUtils.uuid());
+        announcement.setClassId(classId);
         announcement.setTitle(title);
         announcement.setContent(content);
         announcement.setAnnexUrl(annexUrl);
@@ -198,7 +199,7 @@ public class AnnouncementController {
      * @return
      */
     @RequestMapping(value = "list", method = RequestMethod.GET)
-    public ResData getAnnounceList() {
-        return null;
+    public ResData getAnnounceList(String classId) {
+        return ResData.ok(announcementService.getAnnounceList(classId));
     }
 }

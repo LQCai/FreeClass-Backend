@@ -7,6 +7,10 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class AnnouncementServiceImpl implements AnnouncementService {
@@ -57,5 +61,27 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         }
 
         return true;
+    }
+
+    @Override
+    public List<Map<String, Object>> getAnnounceList(String classId) {
+        List<Map<String, Object>> announceList = new ArrayList<>();
+
+        List<Map<String, Object>> resultList = announcementDao.selectAnnounceList(classId);
+
+        for (Map<String, Object> result :
+                resultList) {
+            Map<String, Object> announce = new HashMap<>();
+
+            announce.put("id", result.get("id"));
+            announce.put("title", result.get("title"));
+            announce.put("content", result.get("content"));
+            announce.put("annexUrl", result.get("annex_url"));
+            announce.put("created", result.get("created"));
+
+            announceList.add(announce);
+        }
+
+        return announceList;
     }
 }

@@ -7,6 +7,8 @@ import java.util.Date;
 public class AnnouncementModel {
     private String id;
 
+    private String classId;
+
     private String title;
 
     private String annexUrl;
@@ -83,5 +85,13 @@ public class AnnouncementModel {
 
     public void setContent(String content) {
         this.content = content == null ? null : content.trim();
+    }
+
+    public String getClassId() {
+        return classId;
+    }
+
+    public void setClassId(String classId) {
+        this.classId = classId;
     }
 }
