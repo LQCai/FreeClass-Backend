@@ -46,4 +46,16 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         }
         return true;
     }
+
+    @Override
+    public boolean deleteAnnouncement(String id) {
+        try {
+            announcementDao.deleteAnnouncement(id);
+        } catch (Exception e) {
+            logger.error("删除公告失败：" + e.getMessage());
+            return false;
+        }
+
+        return true;
+    }
 }

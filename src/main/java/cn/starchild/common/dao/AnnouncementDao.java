@@ -7,4 +7,6 @@ public interface AnnouncementDao extends Mapper<AnnouncementModel> {
     AnnouncementModel selectAnnounceById(String id);
 
     boolean updateAnnounce(AnnouncementModel announcement);
+
+    void deleteAnnouncement(String id);
 }

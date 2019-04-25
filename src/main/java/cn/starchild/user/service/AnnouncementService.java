@@ -8,4 +8,6 @@ public interface AnnouncementService {
     boolean validateAnnouncement(String id);
 
     boolean editAnnouncement(AnnouncementModel announcement);
+
+    boolean deleteAnnouncement(String id);
 }

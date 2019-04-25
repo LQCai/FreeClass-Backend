@@ -41,8 +41,14 @@
         where id = #{id,jdbcType=CHAR}
         and status != 2
     </update>
+    <update id="deleteAnnouncement" parameterType="string">
+        update t_announcement
+        set status = 2
+        where id = #{id}
+          and status != 2
+    </update>
     <select id="selectAnnounceById" resultMap="BaseResultMap" parameterType="string">
-        select id,title
+        select id, title
         from t_announcement
         where id = #{id}
           and status != 2

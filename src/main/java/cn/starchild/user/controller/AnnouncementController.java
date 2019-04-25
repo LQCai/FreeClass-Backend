@@ -7,8 +7,10 @@ import cn.starchild.common.util.FileUtils;
 import cn.starchild.common.util.UUIDUtils;
 import cn.starchild.user.service.AnnouncementService;
 import cn.starchild.user.service.ClassService;
+import com.alibaba.fastjson.JSONObject;
 import com.sun.istack.internal.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -152,8 +154,42 @@ public class AnnouncementController {
      * @return
      */
     @RequestMapping(value = "delete", method = RequestMethod.DELETE)
-    public ResData deleteAnnounce() {
-        return null;
+    public ResData deleteAnnounce(@RequestBody String jsonParams) {
+        JSONObject classData = JSONObject.parseObject(jsonParams).getJSONObject("deleteData");
+        if (!classData.containsKey("id")) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "公告id为空");
+        }
+
+        if (!classData.containsKey("teacherId")) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "teacherId为空");
+        }
+
+        if (!classData.containsKey("classId")) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "classId为空");
+        }
+
+        String id = classData.getString("id");
+        String classId = classData.getString("classId");
+        String teacherId = classData.getString("teacherId");
+
+        // 验证该课堂是否存在，且是不是该用户创建的
+        boolean isClass = classService.validateClassForTeacher(classId, teacherId);
+        if (!isClass) {
+            return ResData.error(Code.DATA_NOT_FOUND, "该公告不是该教师所创建");
+        }
+
+        // 判断作业是否存在
+        boolean isAnnounce = announcementService.validateAnnouncement(id);
+        if (!isAnnounce) {
+            return ResData.error(Code.DATA_NOT_FOUND, "该公告不存在");
+        }
+
+        boolean result = announcementService.deleteAnnouncement(id);
+        if (!result) {
+            return ResData.error(Code.DATABASE_DELETE_FAIL, "删除公告失败");
+        }
+
+        return ResData.ok();
     }
 
     /**
