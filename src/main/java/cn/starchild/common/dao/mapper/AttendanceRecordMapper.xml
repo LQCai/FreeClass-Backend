@@ -19,5 +19,13 @@
           and student_id = #{studentId}
           and status = 1
     </select>
+    <select id="selectCheckList" resultType="java.util.Map" parameterType="string">
+        select id,
+               student_id,
+               status*1 status,
+               created
+        from t_attendance_record
+        where attendance_id = #{attendanceId}
+    </select>
 
 </mapper>

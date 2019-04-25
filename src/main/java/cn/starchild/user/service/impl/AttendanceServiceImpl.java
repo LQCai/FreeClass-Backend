@@ -3,6 +3,7 @@ package cn.starchild.user.service.impl;
 import cn.starchild.common.dao.AttendanceDao;
 import cn.starchild.common.dao.AttendanceDigtalDao;
 import cn.starchild.common.dao.AttendanceRecordDao;
+import cn.starchild.common.dao.ClassStudentDao;
 import cn.starchild.common.model.AttendanceDigtalModel;
 import cn.starchild.common.model.AttendanceModel;
 import cn.starchild.common.model.AttendanceRecordModel;
@@ -10,15 +11,13 @@ import cn.starchild.common.util.DateUtils;
 import cn.starchild.common.util.RandomUtils;
 import cn.starchild.common.util.UUIDUtils;
 import cn.starchild.user.service.AttendanceService;
+import cn.starchild.user.service.ClassStudentService;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Service
@@ -29,6 +28,8 @@ public class AttendanceServiceImpl implements AttendanceService {
     private AttendanceDigtalDao attendanceDigtalDao;
     @Resource
     private AttendanceRecordDao attendanceRecordDao;
+    @Resource
+    private ClassStudentDao classStudentDao;
 
     private Logger logger = Logger.getLogger(this.getClass());
 
@@ -175,5 +176,40 @@ public class AttendanceServiceImpl implements AttendanceService {
         }
 
         return true;
+    }
+
+    @Override
+    public List<Map<String, Object>> getAttendanceList(String classId) {
+        return attendanceDao.selectAttendanceList(classId);
+    }
+
+    @Override
+    public List<Map<String, Object>> getCheckList(String attendanceId, String classId) {
+        List<Map<String, Object>> studentList = classStudentDao.selectStudentList(classId);
+        List<Map<String, Object>> checkList = attendanceRecordDao.selectCheckList(attendanceId);
+
+        List<Map<String, Object>> resultList = new ArrayList<>();
+
+        // 遍历该课堂学生列表,再遍历签到列表,匹配studentId相同的记录
+        for (Map<String, Object> student :
+                studentList) {
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("studentId", student.get("id"));
+            result.put("studentName", student.get("name"));
+            result.put("studentCode", student.get("serial_code"));
+
+            for (Map<String, Object> check :
+                    checkList) {
+                if (student.get("id").equals(check.get("student_id"))) {
+                    result.put("status", check.get("status"));
+                    result.put("created", check.get("created"));
+                }
+            }
+
+            resultList.add(result);
+        }
+
+        return resultList;
     }
 }

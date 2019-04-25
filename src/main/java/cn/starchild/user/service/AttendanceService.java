@@ -1,5 +1,6 @@
 package cn.starchild.user.service;
 
+import java.util.List;
 import java.util.Map;
 
 public interface AttendanceService {
@@ -18,4 +19,8 @@ public interface AttendanceService {
     boolean validateHasChecked(String attendanceId, String studentId);
 
     boolean checkIn(String attendanceId, String studentId);
+
+    List<Map<String, Object>> getAttendanceList(String classId);
+
+    List<Map<String, Object>> getCheckList(String attendanceId, String classId);
 }

@@ -51,5 +51,16 @@
         where id = #{id}
           and status = 1
     </select>
+    <select id="selectAttendanceList" resultType="java.util.Map" parameterType="string">
+        select id,
+               name,
+               type * 1   type,
+               status * 1 status,
+               created
+        from t_attendance
+        where class_id = #{classId}
+          and status != 2
+        order by modified desc
+    </select>
 
 </mapper>

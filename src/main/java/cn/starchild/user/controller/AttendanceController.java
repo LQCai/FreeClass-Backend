@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -106,7 +107,7 @@ public class AttendanceController {
 
         boolean result = attendanceService.stopStartingAttendance(attendanceId);
         if (!result) {
-            return ResData.error(Code.DATABASE_UPDATE_FAIL,  "停止考勤失败");
+            return ResData.error(Code.DATABASE_UPDATE_FAIL, "停止考勤失败");
         }
 
         return ResData.ok();
@@ -149,7 +150,7 @@ public class AttendanceController {
 
         boolean result = attendanceService.stopStartingAttendance(attendanceId);
         if (!result) {
-            return ResData.error(Code.DATABASE_UPDATE_FAIL,  "停止考勤失败");
+            return ResData.error(Code.DATABASE_UPDATE_FAIL, "停止考勤失败");
         }
 
         return ResData.ok();
@@ -200,5 +201,29 @@ public class AttendanceController {
         }
 
         return ResData.ok();
+    }
+
+    /**
+     * 获取指定课堂的考勤列表
+     * @param classId
+     * @return
+     */
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public ResData getAttendanceList(String classId) {
+        List<Map<String, Object>> attendanceList = attendanceService.getAttendanceList(classId);
+        return ResData.ok(attendanceList);
+    }
+
+    /**
+     * 获取指定考勤签到记录
+     * @param attendanceId
+     * @param classId
+     * @return
+     */
+    @RequestMapping(value = "/checkList", method = RequestMethod.GET)
+    public ResData getCheckList(String attendanceId,
+                                String classId) {
+        List<Map<String, Object>> checkList = attendanceService.getCheckList(attendanceId, classId);
+        return ResData.ok(checkList);
     }
 }

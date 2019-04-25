@@ -64,6 +64,7 @@
         where cs.class_id = #{classId}
           and cs.status != 2
           and u.status != 2
+        order by u.serial_code asc
     </select>
     <select id="getStudentInfo" resultMap="UserResultMap" parameterType="ClassStudent">
         select u.id,
