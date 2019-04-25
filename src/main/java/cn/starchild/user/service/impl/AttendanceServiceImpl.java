@@ -111,4 +111,31 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         return true;
     }
+
+    @Override
+    public boolean validateIsStarting(String id) {
+        AttendanceModel attendance = attendanceDao.selectStartingAttendance(id);
+        if (attendance == null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean stopStartingAttendance(String attendanceId) {
+        AttendanceModel stopAttendanceModal = new AttendanceModel();
+        stopAttendanceModal.setModified(new Date());
+        stopAttendanceModal.setStatus((byte) 3);
+        stopAttendanceModal.setId(attendanceId);
+
+        try {
+            attendanceDao.stopAttendance(stopAttendanceModal);
+        } catch (Exception e) {
+            logger.error("停止考勤失败:" + e.getMessage());
+            return false;
+        }
+
+        return true;
+    }
 }

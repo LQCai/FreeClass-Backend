@@ -5,8 +5,8 @@
         <id column="id" jdbcType="CHAR" property="id"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="class_id" jdbcType="CHAR" property="classId"/>
-        <result column="type" jdbcType="BIT" property="type"/>
-        <result column="status" jdbcType="BIT" property="status"/>
+        <result column="type" jdbcType="TINYINT" property="type"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
         <result column="created" jdbcType="TIMESTAMP" property="created"/>
         <result column="modified" jdbcType="TIMESTAMP" property="modified"/>
     </resultMap>
@@ -39,10 +39,17 @@
     </select>
     <select id="selectStartingAttendanceList" resultType="java.util.Map">
         select id,
-               status*1 status,
+               status * 1 status,
                modified
         from t_attendance
         where status = 1
+    </select>
+    <select id="selectStartingAttendance" resultMap="BaseResultMap" parameterType="string">
+        select id,
+               name
+        from t_attendance
+        where id = #{id}
+          and status = 1
     </select>
 
 </mapper>

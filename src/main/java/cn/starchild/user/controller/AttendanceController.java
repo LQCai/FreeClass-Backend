@@ -5,6 +5,7 @@ import cn.starchild.common.domain.ResData;
 import cn.starchild.common.util.UUIDUtils;
 import cn.starchild.user.service.AttendanceService;
 import cn.starchild.user.service.ClassService;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,7 +72,40 @@ public class AttendanceController {
      */
     @RequestMapping(value = "/stop", method = RequestMethod.PUT)
     public ResData stopAttendance(@RequestBody String jsonParams) {
-        return null;
+        JSONObject data = JSONObject.parseObject(jsonParams).getJSONObject("stopData");
+
+        if (!data.containsKey("teacherId")) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "教师id不可为空");
+        }
+        if (!data.containsKey("classId")) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "课堂id不可为空");
+        }
+        if (!data.containsKey("attendanceId")) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "考勤id不可为空");
+        }
+
+        String teacherId = data.getString("teacherId");
+        String classId = data.getString("classId");
+        String attendanceId = data.getString("attendanceId");
+
+        // 验证该课堂是否存在，且是不是该用户创建的
+        boolean isClass = classService.validateClassForTeacher(classId, teacherId);
+        if (!isClass) {
+            return ResData.error(Code.DATA_NOT_FOUND, "该作业不是该教师所创建");
+        }
+
+        // 验证考勤是否已停止
+        boolean isStartingAttendance = attendanceService.validateIsStarting(attendanceId);
+        if (!isStartingAttendance) {
+            return ResData.error(Code.DATA_NOT_FOUND, "考勤不存在或已停止");
+        }
+
+        boolean result = attendanceService.stopStartingAttendance(attendanceId);
+        if (!result) {
+            return ResData.error(Code.DATABASE_UPDATE_FAIL,  "停止考勤失败");
+        }
+
+        return ResData.ok();
     }
 
     /**

@@ -10,4 +10,8 @@ public interface AttendanceService {
     boolean validateHasAttendance(String classId);
 
     boolean stopStartingAttendanceResult();
+
+    boolean validateIsStarting(String attendanceId);
+
+    boolean stopStartingAttendance(String attendanceId);
 }
