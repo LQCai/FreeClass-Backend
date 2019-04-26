@@ -212,4 +212,24 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         return resultList;
     }
+
+    @Override
+    public Map<String, Object> getStartingAttendanceInfo(String attendanceId, String classId) {
+        // 学生列表
+        List<Map<String, Object>> studentList = classStudentDao.selectStudentList(classId);
+        // 学生考勤记录
+        List<Map<String, Object>> checkList = attendanceRecordDao.selectCheckList(attendanceId);
+        // 考勤信息
+        Map<String, Object> attendance = attendanceDao.selectAttendanceInfo(attendanceId);
+
+        Map<String, Object> startingAttendanceInfo = new HashMap<>();
+
+        startingAttendanceInfo.put("name", attendance.get("name"));
+        startingAttendanceInfo.put("code", attendance.get("code"));
+        startingAttendanceInfo.put("status", attendance.get("status"));
+        startingAttendanceInfo.put("studentCount", studentList.size());
+        startingAttendanceInfo.put("checkCount", checkList.size());
+
+        return startingAttendanceInfo;
+    }
 }

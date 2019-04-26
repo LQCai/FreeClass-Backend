@@ -23,4 +23,6 @@ public interface AttendanceService {
     List<Map<String, Object>> getAttendanceList(String classId);
 
     List<Map<String, Object>> getCheckList(String attendanceId, String classId);
+
+    Map<String, Object> getStartingAttendanceInfo(String attendanceId, String classId);
 }

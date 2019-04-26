@@ -30,20 +30,21 @@ public class AttendanceController {
     /**
      * 发起数字考勤
      *
-     * @param classId
-     * @param teacherId
      * @return
      */
     @RequestMapping(value = "/startDigital", method = RequestMethod.POST)
-    public ResData startDigitalAttendance(String classId,
-                                          String teacherId) {
-        if (teacherId == null) {
-            return ResData.error(Code.PARAM_FORMAT_ERROR, "teacherId为空");
+    public ResData startDigitalAttendance(@RequestBody String jsonParams) {
+        JSONObject data = JSONObject.parseObject(jsonParams).getJSONObject("startData");
+
+        if (!data.containsKey("teacherId")) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "教师id不可为空");
+        }
+        if (!data.containsKey("classId")) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "课堂id不可为空");
         }
 
-        if (classId == null) {
-            return ResData.error(Code.PARAM_FORMAT_ERROR, "classId为空");
-        }
+        String classId = data.getString("classId");
+        String teacherId = data.getString("teacherId");
 
         // 验证该课堂是否存在，且是不是该用户创建的
         boolean isClass = classService.validateClassForTeacher(classId, teacherId);
@@ -159,26 +160,25 @@ public class AttendanceController {
     /**
      * 考勤签到
      *
-     * @param studentId
-     * @param attendanceId
-     * @param classId
      * @return
      */
     @RequestMapping(value = "/checkIn", method = RequestMethod.POST)
-    public ResData checkIn(String studentId,
-                           String classId,
-                           String attendanceId) {
-        if (studentId == null) {
-            return ResData.error(Code.PARAM_FORMAT_ERROR, "学生id不能为空");
+    public ResData checkIn(String jsonParams) {
+        JSONObject data = JSONObject.parseObject(jsonParams).getJSONObject("checkData");
+
+        if (!data.containsKey("studentId")) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "学生id不可为空");
+        }
+        if (!data.containsKey("classId")) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "课堂id不可为空");
+        }
+        if (!data.containsKey("attendanceId")) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "考勤id不可为空");
         }
 
-        if (classId == null) {
-            return ResData.error(Code.PARAM_FORMAT_ERROR, "课堂id不能为空");
-        }
-
-        if (attendanceId == null) {
-            return ResData.error(Code.PARAM_FORMAT_ERROR, "出勤id不能为空");
-        }
+        String studentId = data.getString("studentId");
+        String classId = data.getString("classId");
+        String attendanceId = data.getString("attendanceId");
 
         // 判断该学生是否加入该课堂
         ClassStudentModel classStudent = new ClassStudentModel();
@@ -225,5 +225,22 @@ public class AttendanceController {
                                 String classId) {
         List<Map<String, Object>> checkList = attendanceService.getCheckList(attendanceId, classId);
         return ResData.ok(checkList);
+    }
+
+    /**
+     * 获取实时考勤信息
+     * @param attendanceId
+     * @param classId
+     * @return
+     */
+    @RequestMapping(value = "/startingInfo", method = RequestMethod.GET)
+    public ResData getStartingInfo(String attendanceId,
+                                   String classId) {
+        Map<String, Object> startingInfo = attendanceService.getStartingAttendanceInfo(attendanceId, classId);
+        if (startingInfo == null) {
+            return ResData.error(Code.DATA_NOT_FOUND, "找不到该考勤信息");
+        }
+
+        return ResData.ok(startingInfo);
     }
 }
