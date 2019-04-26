@@ -3,9 +3,12 @@ package cn.starchild.user.controller;
 import cn.starchild.common.domain.Code;
 import cn.starchild.common.domain.ResData;
 import cn.starchild.common.model.HomeWorkModel;
+import cn.starchild.common.model.HomeworkSubmitModel;
+import cn.starchild.common.model.UserModel;
 import cn.starchild.common.util.FileUtils;
 import cn.starchild.common.util.UUIDUtils;
 import cn.starchild.user.service.ClassService;
+import cn.starchild.user.service.ClassStudentService;
 import cn.starchild.user.service.HomeworkService;
 import cn.starchild.user.service.UserService;
 import com.alibaba.fastjson.JSONObject;
@@ -32,6 +35,9 @@ public class HomeworkController {
 
     @Autowired
     private HomeworkService homeworkService;
+
+    @Autowired
+    private ClassStudentService classStudentService;
 
     /**
      * 发布作业
@@ -61,7 +67,7 @@ public class HomeworkController {
             return ResData.error(Code.PARAM_FORMAT_ERROR, "teacherId为空");
         }
 
-        if (homeworkName == null && homeworkName.equals("")) {
+        if (homeworkName == null || homeworkName.equals("")) {
             return ResData.error(Code.PARAM_FORMAT_ERROR, "homeworkName为空");
         }
 
@@ -69,7 +75,7 @@ public class HomeworkController {
             return ResData.error(Code.PARAM_FORMAT_ERROR, "classId为空");
         }
 
-        if (homeworkIntroduction == null && homeworkIntroduction.equals("")) {
+        if (homeworkIntroduction == null || homeworkIntroduction.equals("")) {
             return ResData.error(Code.PARAM_FORMAT_ERROR, "homeworkIntroduction为空");
         }
 
@@ -207,6 +213,8 @@ public class HomeworkController {
             homeWorkModel.setAnnexUrl(annexUrl);
         }
 
+        homeWorkModel.setModified(new Date());
+
         boolean result = homeworkService.updateHomework(homeWorkModel);
         if (!result) {
             return ResData.error(Code.DATABASE_INSERT_FAIL, "发布作业失败!");
@@ -217,6 +225,7 @@ public class HomeworkController {
 
     /**
      * 删除作业
+     *
      * @param jsonParams
      * @return
      */
@@ -262,6 +271,7 @@ public class HomeworkController {
 
     /**
      * 获取作业列表
+     *
      * @param classId
      * @return
      */
@@ -279,6 +289,114 @@ public class HomeworkController {
         List<Map<String, Object>> homeworkList = homeworkService.getHomeworkList(classId);
 
         return ResData.ok(homeworkList);
+    }
+
+
+    /**
+     * 获取学生提交作业列表
+     *
+     * @return
+     */
+    @RequestMapping(value = "studentList", method = RequestMethod.GET)
+    public ResData getStudentJobList(String classId, String homeworkId) {
+        List<Map<String, Object>> studentJobList = homeworkService.getStudentHomeworkList(classId, homeworkId);
+
+        return ResData.ok(studentJobList);
+    }
+
+    /**
+     * 提交作业
+     *
+     * @param studentId
+     * @param classId
+     * @param homeworkId
+     * @param homeworkContent
+     * @param annex
+     * @return
+     */
+    @RequestMapping(value = "submit", method = RequestMethod.POST)
+    public ResData postSubmit(String studentId,
+                              String classId,
+                              String homeworkId,
+                              String homeworkContent,
+                              MultipartFile annex) {
+        if (studentId == null) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "studentId为空");
+        }
+
+        if (classId == null) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "classId为空");
+        }
+
+        if (homeworkId == null) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "homeworkId为空");
+        }
+
+        if (homeworkContent == null || homeworkContent.equals("")) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "作业内容不可为空");
+        }
+
+        // 验证学生是否属于该课堂，并获取相关信息用于命名学生上传文件
+        UserModel student = classStudentService.getStudentInfo(classId, studentId);
+        if (student == null) {
+            return ResData.error(Code.DATA_NOT_FOUND, "该学生不属于该课堂");
+        }
+
+        HomeWorkModel homeWork = homeworkService.getHomeworkInfo(homeworkId);
+        if (homeWork == null) {
+            return ResData.error(Code.DATA_NOT_FOUND, "找不到该发布作业");
+        }
+
+        // 判断是否已经提交
+        boolean isSubmit = homeworkService.validateSubmitted(studentId, homeworkId);
+        if (isSubmit) {
+            return ResData.error(Code.JOB_SUBMITTED, "作业已提交");
+        }
+
+        HomeworkSubmitModel homeworkSubmitModel = new HomeworkSubmitModel();
+
+        if (annex != null) {
+            String uploadFileName = homeWork.getName() + "_" + student.getSerialCode() + "_" + student.getName();
+            String annexUrl = FileUtils.submitHomework(annex, classId, homeworkId, uploadFileName);
+
+            homeworkSubmitModel.setAnnexUrl(FileUtils.HOMEWORK_SUBMIT_COMMON_DOMAIN
+                    + classId + "/"
+                    + homeworkId + "/"
+                    + annexUrl);
+        }
+
+        homeworkSubmitModel.setId(UUIDUtils.uuid());
+        homeworkSubmitModel.setContent(homeworkContent);
+        homeworkSubmitModel.setHomeworkId(homeworkId);
+        homeworkSubmitModel.setStatus((byte) 1);
+        homeworkSubmitModel.setStudentId(studentId);
+        homeworkSubmitModel.setCreated(new Date());
+        homeworkSubmitModel.setModified(new Date());
+
+        boolean result = homeworkService.submitHomework(homeworkSubmitModel);
+        if (!result) {
+            return ResData.error(Code.DATABASE_INSERT_FAIL, "提交作业失败");
+        }
+
+        return ResData.ok();
+    }
+
+    /**
+     * 获取作业提交状态及提交信息
+     * @param studentId
+     * @param homeworkId
+     * @return
+     */
+    @RequestMapping(value = "submitStatus", method = RequestMethod.GET)
+    public ResData getSubmitStatus(String studentId,
+                                   String homeworkId) {
+        HomeworkSubmitModel homeworkSubmitModel = new HomeworkSubmitModel();
+        homeworkSubmitModel.setStudentId(studentId);
+        homeworkSubmitModel.setHomeworkId(homeworkId);
+
+        Map<String, Object> submittedInfo = homeworkService.getSubmittedInfo(studentId, homeworkId);
+
+        return ResData.ok(submittedInfo);
     }
 
 }

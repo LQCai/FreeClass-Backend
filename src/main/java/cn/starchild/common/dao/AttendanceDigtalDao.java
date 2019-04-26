@@ -4,4 +4,5 @@ import cn.starchild.common.model.AttendanceDigtalModel;
 import tk.mybatis.mapper.common.Mapper;
 
 public interface AttendanceDigtalDao extends Mapper<AttendanceDigtalModel> {
+    AttendanceDigtalModel selectByCode(AttendanceDigtalModel attendanceDigtalModel);
 }

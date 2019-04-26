@@ -1,6 +1,7 @@
 package cn.starchild.common.dao;
 
 import cn.starchild.common.model.ClassStudentModel;
+import cn.starchild.common.model.UserModel;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
@@ -16,4 +17,8 @@ public interface ClassStudentDao extends Mapper<ClassStudentModel> {
     boolean deleteByClassId(String classId);
 
     boolean deleteForClassAndStudent(ClassStudentModel classStudent);
+
+    List<Map<String, Object>> selectStudentList(String classId);
+
+    UserModel getStudentInfo(ClassStudentModel classStudentModel);
 }

@@ -62,7 +62,7 @@ public class ClassController {
         if (!classData.containsKey("teacherId")) {
             return ResData.error(Code.PARAM_FORMAT_ERROR, "教师id不可为空");
         }
-        if (!classData.containsKey("className") && classData.getString("className").equals("")) {
+        if (!classData.containsKey("className") || classData.getString("className").equals("")) {
             return ResData.error(Code.PARAM_FORMAT_ERROR, "课堂名不可为空");
         }
         if (!classData.containsKey("peopleMaximum")) {
@@ -104,7 +104,7 @@ public class ClassController {
         if (!classData.containsKey("teacherId")) {
             return ResData.error(Code.PARAM_FORMAT_ERROR, "教师id不可为空");
         }
-        if (!classData.containsKey("className") && classData.getString("className").equals("")) {
+        if (!classData.containsKey("className") || classData.getString("className").equals("")) {
             return ResData.error(Code.PARAM_FORMAT_ERROR, "课堂名不可为空");
         }
         if (!classData.containsKey("peopleMaximum")) {

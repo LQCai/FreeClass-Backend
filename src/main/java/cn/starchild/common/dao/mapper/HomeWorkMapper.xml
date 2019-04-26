@@ -40,7 +40,7 @@
                 deadline = #{deadline,jdbcType=TIMESTAMP},
             </if>
             <if test="modified != null">
-                modified = #{modified,jdbcType=TINYINT},
+                modified = #{modified,jdbcType=TIMESTAMP},
             </if>
         </set>
         where id = #{id,jdbcType=CHAR}
@@ -66,6 +66,13 @@
                created
         from t_homework
         where class_id = #{classId}
+          and status != 2
+    </select>
+    <select id="selectHomework" resultMap="BaseResultMap" parameterType="string">
+        select id,
+               name
+        from t_homework
+        where id = #{homeworkId}
           and status != 2
     </select>
 

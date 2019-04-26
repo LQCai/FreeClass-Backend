@@ -9,6 +9,13 @@
         <result column="created" jdbcType="TIMESTAMP" property="created"/>
         <result column="modified" jdbcType="TIMESTAMP" property="modified"/>
     </resultMap>
+
+    <resultMap id="UserResultMap" type="cn.starchild.common.model.UserModel">
+        <id column="id" jdbcType="CHAR" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="serial_code" jdbcType="CHAR" property="serialCode"/>
+    </resultMap>
+
     <sql id="Base_Column_List">
         id, class_id, student_id, status, created, modified
     </sql>
@@ -38,6 +45,8 @@
                  join t_class_student cs
                       on c.id = cs.class_id
         where c.teacher_id = #{id}
+          and cs.status != 2
+          and c.status != 2
     </select>
     <select id="validateJoined" resultType="java.util.Map" parameterType="ClassStudent">
         select id
@@ -45,6 +54,28 @@
         where class_id = #{classId}
           and student_id = #{studentId}
           and status != 2
+    </select>
+    <select id="selectStudentList" resultType="java.util.Map" parameterType="string">
+        select u.id,
+               u.name,
+               u.serial_code
+        from t_user u
+                 join t_class_student cs on u.id = cs.student_id
+        where cs.class_id = #{classId}
+          and cs.status != 2
+          and u.status != 2
+        order by u.serial_code asc
+    </select>
+    <select id="getStudentInfo" resultMap="UserResultMap" parameterType="ClassStudent">
+        select u.id,
+               u.name,
+               u.serial_code
+        from t_user u
+                 join t_class_student cs on cs.student_id = u.id
+        where u.id = #{studentId}
+          and cs.class_id = #{classId}
+          and u.status != 2
+          and cs.status != 2
     </select>
 
 </mapper>

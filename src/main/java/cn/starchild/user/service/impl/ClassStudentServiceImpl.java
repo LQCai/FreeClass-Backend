@@ -2,6 +2,7 @@ package cn.starchild.user.service.impl;
 
 import cn.starchild.common.dao.ClassStudentDao;
 import cn.starchild.common.model.ClassStudentModel;
+import cn.starchild.common.model.UserModel;
 import cn.starchild.common.util.UUIDUtils;
 import cn.starchild.user.service.ClassStudentService;
 import org.springframework.stereotype.Service;
@@ -65,5 +66,14 @@ public class ClassStudentServiceImpl implements ClassStudentService {
         }
 
         return true;
+    }
+
+    @Override
+    public UserModel getStudentInfo(String classId, String studentId) {
+        ClassStudentModel classStudentModel = new ClassStudentModel();
+        classStudentModel.setStudentId(studentId);
+        classStudentModel.setClassId(classId);
+
+        return classStudentDao.getStudentInfo(classStudentModel);
     }
 }
