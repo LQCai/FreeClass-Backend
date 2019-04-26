@@ -13,7 +13,7 @@ public interface AttendanceDao extends Mapper<AttendanceModel> {
 
     List<Map<String, Object>> selectStartingAttendanceList();
 
-    void stopAttendance(AttendanceModel stopAttendanceModal);
+    void stopOrDropAttendance(AttendanceModel stopAttendanceModal);
 
     AttendanceModel selectStartingAttendance(String id);
 

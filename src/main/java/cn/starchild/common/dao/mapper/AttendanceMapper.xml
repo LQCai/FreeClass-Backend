@@ -13,7 +13,7 @@
     <sql id="Base_Column_List">
         id, name, class_id, type, status, created, modified
     </sql>
-    <update id="stopAttendance" parameterType="AttendanceModel">
+    <update id="stopOrDropAttendance" parameterType="AttendanceModel">
         update t_attendance
         set status   = #{status},
             modified = #{modified}

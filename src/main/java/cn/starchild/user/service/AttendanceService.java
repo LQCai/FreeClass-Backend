@@ -25,4 +25,8 @@ public interface AttendanceService {
     List<Map<String, Object>> getCheckList(String attendanceId, String classId);
 
     Map<String, Object> getStartingAttendanceInfo(String attendanceId, String classId);
+
+    boolean dropStartingAttendance(String attendanceId);
+
+    boolean validateAttendanceCode(String attendanceId, String code);
 }

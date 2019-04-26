@@ -11,7 +11,6 @@ import cn.starchild.common.util.DateUtils;
 import cn.starchild.common.util.RandomUtils;
 import cn.starchild.common.util.UUIDUtils;
 import cn.starchild.user.service.AttendanceService;
-import cn.starchild.user.service.ClassStudentService;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -106,7 +105,7 @@ public class AttendanceServiceImpl implements AttendanceService {
                     stopAttendanceModal.setId((String) startingAttendance.get("id"));
 
                     System.out.println("success");
-                    attendanceDao.stopAttendance(stopAttendanceModal);
+                    attendanceDao.stopOrDropAttendance(stopAttendanceModal);
                 }
             }
         } catch (Exception e) {
@@ -135,7 +134,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         stopAttendanceModal.setId(attendanceId);
 
         try {
-            attendanceDao.stopAttendance(stopAttendanceModal);
+            attendanceDao.stopOrDropAttendance(stopAttendanceModal);
         } catch (Exception e) {
             logger.error("停止考勤失败:" + e.getMessage());
             return false;
@@ -198,12 +197,13 @@ public class AttendanceServiceImpl implements AttendanceService {
             result.put("studentId", student.get("id"));
             result.put("studentName", student.get("name"));
             result.put("studentCode", student.get("serial_code"));
+            result.put("status", 2);
 
             for (Map<String, Object> check :
                     checkList) {
                 if (student.get("id").equals(check.get("student_id"))) {
                     result.put("status", check.get("status"));
-                    result.put("created", check.get("created"));
+                    result.put("checkTime", check.get("created"));
                 }
             }
 
@@ -231,5 +231,35 @@ public class AttendanceServiceImpl implements AttendanceService {
         startingAttendanceInfo.put("checkCount", checkList.size());
 
         return startingAttendanceInfo;
+    }
+
+    @Override
+    public boolean dropStartingAttendance(String attendanceId) {
+        AttendanceModel stopAttendanceModal = new AttendanceModel();
+        stopAttendanceModal.setModified(new Date());
+        stopAttendanceModal.setStatus((byte) 2);
+        stopAttendanceModal.setId(attendanceId);
+
+        try {
+            attendanceDao.stopOrDropAttendance(stopAttendanceModal);
+        } catch (Exception e) {
+            logger.error("放弃考勤失败:" + e.getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean validateAttendanceCode(String attendanceId, String code) {
+        AttendanceDigtalModel attendanceDigtalModel = new AttendanceDigtalModel();
+        attendanceDigtalModel.setAttendanceId(attendanceId);
+        attendanceDigtalModel.setCode(code);
+
+        AttendanceDigtalModel digitalAttendance = attendanceDigtalDao.selectByCode(attendanceDigtalModel);
+        if (digitalAttendance == null) {
+            return false;
+        }
+        return true;
     }
 }

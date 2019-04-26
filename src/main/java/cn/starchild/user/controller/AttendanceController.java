@@ -149,9 +149,9 @@ public class AttendanceController {
             return ResData.error(Code.DATA_NOT_FOUND, "考勤不存在或已停止");
         }
 
-        boolean result = attendanceService.stopStartingAttendance(attendanceId);
+        boolean result = attendanceService.dropStartingAttendance(attendanceId);
         if (!result) {
-            return ResData.error(Code.DATABASE_UPDATE_FAIL, "停止考勤失败");
+            return ResData.error(Code.DATABASE_UPDATE_FAIL, "放弃考勤失败");
         }
 
         return ResData.ok();
@@ -175,10 +175,14 @@ public class AttendanceController {
         if (!data.containsKey("attendanceId")) {
             return ResData.error(Code.PARAM_FORMAT_ERROR, "考勤id不可为空");
         }
+        if (!data.containsKey("code")) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "签到码不可为空");
+        }
 
         String studentId = data.getString("studentId");
         String classId = data.getString("classId");
         String attendanceId = data.getString("attendanceId");
+        String code = data.getString("code");
 
         // 判断该学生是否加入该课堂
         ClassStudentModel classStudent = new ClassStudentModel();
@@ -193,6 +197,12 @@ public class AttendanceController {
         boolean checked = attendanceService.validateHasChecked(attendanceId, studentId);
         if (checked) {
             return ResData.error(Code.CHECKED, "您已签到");
+        }
+
+        // 判断签到码是否正确
+        boolean isCode = attendanceService.validateAttendanceCode(attendanceId, code);
+        if (!isCode) {
+            return ResData.error(Code.DATA_NOT_FOUND, "签到码错误");
         }
 
         boolean result = attendanceService.checkIn(attendanceId, studentId);
