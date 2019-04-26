@@ -163,7 +163,7 @@ public class AttendanceController {
      * @return
      */
     @RequestMapping(value = "/checkIn", method = RequestMethod.POST)
-    public ResData checkIn(String jsonParams) {
+    public ResData checkIn(@RequestBody String jsonParams) {
         JSONObject data = JSONObject.parseObject(jsonParams).getJSONObject("checkData");
 
         if (!data.containsKey("studentId")) {

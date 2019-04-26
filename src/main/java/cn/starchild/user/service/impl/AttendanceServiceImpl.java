@@ -224,7 +224,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         Map<String, Object> startingAttendanceInfo = new HashMap<>();
 
-        startingAttendanceInfo.put("name", attendance.get("name"));
+        startingAttendanceInfo.put("id", attendance.get("id"));
         startingAttendanceInfo.put("code", attendance.get("code"));
         startingAttendanceInfo.put("status", attendance.get("status"));
         startingAttendanceInfo.put("studentCount", studentList.size());
