@@ -7,10 +7,7 @@ import cn.starchild.common.dao.HomeworkSubmitDao;
 import cn.starchild.common.model.HomeWorkModel;
 import cn.starchild.common.model.HomeworkEmailModal;
 import cn.starchild.common.model.HomeworkSubmitModel;
-import cn.starchild.common.util.EmailUtils;
-import cn.starchild.common.util.FileUtils;
-import cn.starchild.common.util.FileZipUtils;
-import cn.starchild.common.util.UUIDUtils;
+import cn.starchild.common.util.*;
 import cn.starchild.user.service.HomeworkService;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -198,27 +195,40 @@ public class HomeworkServiceImpl implements HomeworkService {
         }
         List<Map<String, Object>> homeworkEmailList = homeworkEmailDao.selectByHomeworkList(homeworkIdList);
 
-        EmailUtils emailUtils = new EmailUtils();
-        FileZipUtils fileZipUtils = new FileZipUtils();
+        Date now = new Date();
 
-        // 再次循环匹配
-        for (Map<String, Object> homework :
-                homeworkList) {
-
-            // 取出发送邮件记录表，如果status是成功则不需要发送
+        // 循环取出发送邮件记录表，如果status是成功则不需要发送,移除homeworkList元素
+        for (int i = homeworkList.size() - 1; i >= 0; i--) {
             for (Map<String, Object> homeworkEmail :
                     homeworkEmailList) {
-                if (homeworkEmail.get("status").toString().equals("1")) {
+                String status = homeworkEmail.get("status").toString();
+
+                if (status.equals("1") && homeworkEmail.get("homework_id").equals(homeworkList.get(i).get("id"))) {
+                    homeworkList.remove(homeworkList.get(i));
+                    break;
+                }
+
+                Date deadline = (Date) homeworkList.get(i).get("deadline");
+
+                // 如果截止时间与当前时间间隔超过10分钟则移除数据（没10分钟执行一次此函数）
+                if (deadline.after(now) && DateUtils.MinuteDifference(deadline, now) >= 10) {
+                    homeworkList.remove(homeworkList.get(i));
                     break;
                 }
             }
+        }
+
+        EmailUtils emailUtils = new EmailUtils();
+
+        // 最后一次循环发送需要发送的邮件
+        for (Map<String, Object> homework :
+                homeworkList) {
 
             HomeworkEmailModal homeworkEmail = new HomeworkEmailModal();
             homeworkEmail.setId(UUIDUtils.uuid());
             homeworkEmail.setHomeworkId(homework.get("id").toString());
             homeworkEmail.setCreated(new Date());
             homeworkEmail.setModified(new Date());
-            homeworkEmail.setStatus((byte) 1);
 
             String annexDirUrl = "";
             try {
@@ -227,7 +237,7 @@ public class HomeworkServiceImpl implements HomeworkService {
                 new FileZipUtils(new File(annexDirUrl, annexDir.getName() + ".zip")).zipFiles(annexDir);
 
                 // 发送邮件
-                File annex = new File(annexDirUrl + ".zip");
+                File annex = new File(annexDirUrl + "/" + homework.get("id") + ".zip");
                 emailUtils.sendWithFile(homework.get("email").toString(), "作业提交通知", "大家的作业都在这啦!", annex);
 
             } catch (Exception e) {
@@ -237,6 +247,8 @@ public class HomeworkServiceImpl implements HomeworkService {
                 homeworkEmailDao.insert(homeworkEmail);
                 break;
             }
+
+            homeworkEmail.setStatus((byte) 1);
 
             // 插入发送成功通知
             homeworkEmailDao.insert(homeworkEmail);

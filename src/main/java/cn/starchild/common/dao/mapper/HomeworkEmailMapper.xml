@@ -15,7 +15,7 @@
         select
         id,
         homework_id,
-        status
+        status*1 status
         from t_homework_email
         where homework_id in
         <foreach collection="list" item="homeworkId" index="index" open="(" close=")" separator=",">

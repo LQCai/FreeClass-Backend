@@ -348,7 +348,7 @@ public class HomeworkController {
         }
 
         // 判断是否已过截止时间
-        if (homeWork.getDeadline().after(new Date())) {
+        if (homeWork.getDeadline().before(new Date())) {
             return ResData.error(Code.AFTER_DEADLINE, "作业已过截止时间,不可提交");
         }
 
