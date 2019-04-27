@@ -16,13 +16,13 @@ public class FileUtils {
     public final static int FILE_TYPE_TOILET = 3;
     public final static int FILE_TYPE_SKIL_BAG = 4;
     public final static int FILE_TYPE_USER_OPINION = 5;
-    public static String homeworkAnnex = "/var/lib/tomcat/webapps/upload/freeClass/homeworkAnnex";
-    public static String announcementAnnex = "/var/lib/tomcat/webapps/upload/freeClass/announcementAnnex";
-    public static String homeworkSubmitCommonUrl = "/var/lib/tomcat/webapps/upload/freeClass/homeworkSubmit/";
+    public static String homeworkAnnex = "/home/lqcai/nginx-image/freeClass/homeworkAnnex";
+    public static String announcementAnnex = "/home/lqcai/nginx-image/freeClass/announcementAnnex";
+    public static String homeworkSubmitCommonUrl = "/home/lqcai/nginx-image/freeClass/homeworkSubmit/";
     //    public static String homeworkAnnex = "C://Users/LQCai/freeClass/upload/homeworkAnnex";
-    public final static String HOMEWORK_ANNEX_DOMAIN = "https://www.starchild.cn:8443/upload/freeClass/homeworkAnnex/";
-    public final static String HOMEWORK_SUBMIT_COMMON_DOMAIN = "https://www.starchild.cn:8443/upload/freeClass/homeworkSubmit/";
-    public final static String ANNOUNCEMENT_ANNEX_DOMAIN = "https://www.starchild.cn:8443/upload/freeClass/announcementAnnex/";
+    public final static String HOMEWORK_ANNEX_DOMAIN = "http://www.starchild.cn/freeClass/homeworkAnnex/";
+    public final static String HOMEWORK_SUBMIT_COMMON_DOMAIN = "http://www.starchild.cn/freeClass/homeworkSubmit/";
+    public final static String ANNOUNCEMENT_ANNEX_DOMAIN = "http://www.starchild.cn/freeClass/announcementAnnex/";
 
     /**
      * 文件名加UUID
@@ -99,6 +99,8 @@ public class FileUtils {
             }
             bos.flush();
             bos.close();
+
+            Runtime.getRuntime().exec("chmod -R 777 /home/lqcai/nginx-image/freeClass");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -126,6 +128,8 @@ public class FileUtils {
             }
             bos.flush();
             bos.close();
+
+            Runtime.getRuntime().exec("chmod -R 777 /home/lqcai/nginx-image/freeClass");
         } catch (IOException e) {
             e.printStackTrace();
         }
