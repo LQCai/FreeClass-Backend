@@ -347,6 +347,11 @@ public class HomeworkController {
             return ResData.error(Code.DATA_NOT_FOUND, "找不到该发布作业");
         }
 
+        // 判断是否已过截止时间
+        if (homeWork.getDeadline().after(new Date())) {
+            return ResData.error(Code.AFTER_DEADLINE, "作业已过截止时间,不可提交");
+        }
+
         // 判断是否已经提交
         boolean isSubmit = homeworkService.validateSubmitted(studentId, homeworkId);
         if (isSubmit) {

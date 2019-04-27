@@ -15,6 +15,7 @@ public final class Code {
     public static final String CLASS_NOT_JOINED = "1012";//未加入课堂
 
     public static final String JOB_SUBMITTED = "1021";//作业已提交
+    public static final String AFTER_DEADLINE = "1021";//作业截止
 
 
     public static final String ATTENDANCE_STARTING = "1031";//考勤进行中

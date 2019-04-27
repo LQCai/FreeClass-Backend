@@ -70,7 +70,8 @@
     </select>
     <select id="selectHomework" resultMap="BaseResultMap" parameterType="string">
         select id,
-               name
+               name,
+               deadline
         from t_homework
         where id = #{homeworkId}
           and status != 2

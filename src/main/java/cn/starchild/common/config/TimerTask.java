@@ -1,6 +1,7 @@
 package cn.starchild.common.config;
 
 import cn.starchild.user.service.AttendanceService;
+import cn.starchild.user.service.HomeworkService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,6 +16,9 @@ public class TimerTask {
     @Autowired
     private AttendanceService attendanceService;
 
+    @Autowired
+    private HomeworkService homeworkService;
+
     private Logger logger = Logger.getLogger(this.getClass());
 
 
@@ -27,6 +31,13 @@ public class TimerTask {
         boolean stopStartingAttendanceResult = attendanceService.stopStartingAttendanceResult();
         if (stopStartingAttendanceResult) {
             logger.info("停止考勤成功");
+        }
+    }
+
+    public void sendEmail() {
+        boolean sendEmailResult = homeworkService.sendEmail();
+        if (sendEmailResult) {
+            logger.info("定时收集作业发送至教师邮箱成功");
         }
     }
 }

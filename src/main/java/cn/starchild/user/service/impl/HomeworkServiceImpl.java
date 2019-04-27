@@ -174,4 +174,10 @@ public class HomeworkServiceImpl implements HomeworkService {
 
         return  homeworkSubmitInfo;
     }
+
+    @Override
+    public boolean sendEmail() {
+
+        return false;
+    }
 }
