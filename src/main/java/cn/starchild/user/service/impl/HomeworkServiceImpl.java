@@ -2,18 +2,22 @@ package cn.starchild.user.service.impl;
 
 import cn.starchild.common.dao.ClassStudentDao;
 import cn.starchild.common.dao.HomeWorkDao;
+import cn.starchild.common.dao.HomeworkEmailDao;
 import cn.starchild.common.dao.HomeworkSubmitDao;
 import cn.starchild.common.model.HomeWorkModel;
+import cn.starchild.common.model.HomeworkEmailModal;
 import cn.starchild.common.model.HomeworkSubmitModel;
+import cn.starchild.common.util.EmailUtils;
+import cn.starchild.common.util.FileUtils;
+import cn.starchild.common.util.FileZipUtils;
+import cn.starchild.common.util.UUIDUtils;
 import cn.starchild.user.service.HomeworkService;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.util.*;
 
 @Service
 public class HomeworkServiceImpl implements HomeworkService {
@@ -25,6 +29,9 @@ public class HomeworkServiceImpl implements HomeworkService {
 
     @Resource
     private HomeworkSubmitDao homeworkSubmitDao;
+
+    @Resource
+    private HomeworkEmailDao homeworkEmailDao;
 
     private Logger logger = Logger.getLogger(this.getClass());
 
@@ -98,8 +105,8 @@ public class HomeworkServiceImpl implements HomeworkService {
 
         List<Map<String, Object>> studentHomeworkList = new ArrayList<>();
 
-        for (Map<String, Object> student:
-             studentList) {
+        for (Map<String, Object> student :
+                studentList) {
             Map<String, Object> studentHomework = new HashMap<>();
 
             studentHomework.put("studentId", student.get("id"));
@@ -108,8 +115,8 @@ public class HomeworkServiceImpl implements HomeworkService {
             studentHomework.put("status", 2);
 
             // 匹配提交记录中与学生id相同的记录，获取已提交作业的学生记录
-            for (Map<String, Object> submitRecord:
-                 submitHomeworkList) {
+            for (Map<String, Object> submitRecord :
+                    submitHomeworkList) {
                 if (submitRecord.get("student_id").equals(student.get("id"))) {
                     studentHomework.put("status", 1);
                     studentHomework.put("content", submitRecord.get("content"));
@@ -165,19 +172,74 @@ public class HomeworkServiceImpl implements HomeworkService {
 
         if (homeworkSubmit == null) {
             homeworkSubmitInfo.put("status", 2);
-        }else {
+        } else {
             homeworkSubmitInfo.put("status", 1);
             homeworkSubmitInfo.put("content", homeworkSubmit.getContent());
             homeworkSubmitInfo.put("annexUrl", homeworkSubmit.getAnnexUrl());
             homeworkSubmitInfo.put("id", homeworkSubmit.getId());
         }
 
-        return  homeworkSubmitInfo;
+        return homeworkSubmitInfo;
     }
 
     @Override
-    public boolean sendEmail() {
+    public void sendEmail() {
+        // 获取作业截止时间与当前时间相差不足一天的作业列表
+        List<Map<String, Object>> homeworkList = homeWorkDao.selectNearDeadlineHomeworkList();
 
-        return false;
+        List<String> homeworkIdList = new ArrayList<>();
+
+        // 先循环拿到作业id数组
+        // 用于查询这些作业中是否有已发送成功的邮件
+        // 有就在不用再发了
+        for (Map<String, Object> homework :
+                homeworkList) {
+            homeworkIdList.add(homework.get("id").toString());
+        }
+        List<Map<String, Object>> homeworkEmailList = homeworkEmailDao.selectByHomeworkList(homeworkIdList);
+
+        EmailUtils emailUtils = new EmailUtils();
+        FileZipUtils fileZipUtils = new FileZipUtils();
+
+        // 再次循环匹配
+        for (Map<String, Object> homework :
+                homeworkList) {
+
+            // 取出发送邮件记录表，如果status是成功则不需要发送
+            for (Map<String, Object> homeworkEmail :
+                    homeworkEmailList) {
+                if (homeworkEmail.get("status").toString().equals("1")) {
+                    break;
+                }
+            }
+
+            HomeworkEmailModal homeworkEmail = new HomeworkEmailModal();
+            homeworkEmail.setId(UUIDUtils.uuid());
+            homeworkEmail.setHomeworkId(homework.get("id").toString());
+            homeworkEmail.setCreated(new Date());
+            homeworkEmail.setModified(new Date());
+            homeworkEmail.setStatus((byte) 1);
+
+            String annexDirUrl = "";
+            try {
+                annexDirUrl = FileUtils.homeworkSubmitCommonUrl + homework.get("class_id") + "/" + homework.get("id");
+                File annexDir = new File(annexDirUrl);
+                new FileZipUtils(new File(annexDirUrl, annexDir.getName() + ".zip")).zipFiles(annexDir);
+
+                // 发送邮件
+                File annex = new File(annexDirUrl + ".zip");
+                emailUtils.sendWithFile(homework.get("email").toString(), "作业提交通知", "大家的作业都在这啦!", annex);
+
+            } catch (Exception e) {
+                logger.error("发送邮件失败：" + e.getMessage());
+                homeworkEmail.setStatus((byte) 2);
+
+                homeworkEmailDao.insert(homeworkEmail);
+                break;
+            }
+
+            // 插入发送成功通知
+            homeworkEmailDao.insert(homeworkEmail);
+        }
     }
 }

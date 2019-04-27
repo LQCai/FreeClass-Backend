@@ -404,4 +404,10 @@ public class HomeworkController {
         return ResData.ok(submittedInfo);
     }
 
+    @RequestMapping(value = "send", method = RequestMethod.GET)
+    public ResData sendEmail() {
+        homeworkService.sendEmail();
+        return ResData.ok();
+    }
+
 }

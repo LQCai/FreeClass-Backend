@@ -17,4 +17,6 @@ public interface HomeWorkDao extends Mapper<HomeWorkModel> {
     List<Map<String, Object>> selectHomeworkList(String classId);
 
     HomeWorkModel selectHomework(String homeworkId);
+
+    List<Map<String, Object>> selectNearDeadlineHomeworkList();
 }

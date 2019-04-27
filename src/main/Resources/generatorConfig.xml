@@ -42,7 +42,7 @@
         </javaClientGenerator>
 
         <!-- 数据表进行生成操作 schema:相当于库名; tableName:表名; domainObjectName:对应的DO -->
-        <table schema="free_class" tableName="t_material_comment" domainObjectName="MaterialComment"
+        <table schema="free_class" tableName="t_homework_email" domainObjectName="HomeworkEmail"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">

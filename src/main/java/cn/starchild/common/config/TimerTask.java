@@ -35,9 +35,10 @@ public class TimerTask {
     }
 
     public void sendEmail() {
-        boolean sendEmailResult = homeworkService.sendEmail();
-        if (sendEmailResult) {
-            logger.info("定时收集作业发送至教师邮箱成功");
+        try {
+            homeworkService.sendEmail();
+        } catch (Exception e) {
+            logger.error("发送邮件异常" + e.getMessage());
         }
     }
 }

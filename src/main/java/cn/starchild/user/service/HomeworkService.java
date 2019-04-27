@@ -27,5 +27,5 @@ public interface HomeworkService {
 
     Map<String, Object> getSubmittedInfo(String studentId, String homeworkId);
 
-    boolean sendEmail();
+    void sendEmail();
 }
