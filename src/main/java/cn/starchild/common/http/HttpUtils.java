@@ -41,6 +41,28 @@ public abstract class HttpUtils {
         return client.postJson(request);
     }
 
+//    /**
+//     * POST请求,普通参数方式提交
+//     *
+//     * @param url
+//     * @param paramsMap
+//     * @return
+//     */
+//    public static HttpResponse post(String url, Map<String, String> paramsMap) {
+//        HttpClient client = getHttpClient();
+//
+//        HttpRequest request = new HttpRequest();
+//        request.setUrl(url);
+//        if (null != paramsMap) {
+//            for (Map.Entry<String, String> entry : paramsMap.entrySet()) {
+//                request.putParam(entry.getKey(), entry.getValue());
+//            }
+//        }
+//
+//        printLog(request);
+//        return client.post(request);
+//    }
+
     /**
      * POST请求,普通参数方式提交
      *
@@ -48,14 +70,14 @@ public abstract class HttpUtils {
      * @param paramsMap
      * @return
      */
-    public static HttpResponse post(String url, Map<String, String> paramsMap) {
+    public static HttpResponse post(String url, Map<String, Object> paramsMap) {
         HttpClient client = getHttpClient();
 
         HttpRequest request = new HttpRequest();
         request.setUrl(url);
         if (null != paramsMap) {
-            for (Map.Entry<String, String> entry : paramsMap.entrySet()) {
-                request.putParam(entry.getKey(), entry.getValue());
+            for (Map.Entry<String, Object> entry : paramsMap.entrySet()) {
+                request.putParam(entry.getKey(), entry.getValue().toString());
             }
         }
 

@@ -3,6 +3,8 @@ package cn.starchild.user.controller;
 import cn.starchild.common.domain.ResData;
 import cn.starchild.common.http.HttpResponse;
 import cn.starchild.common.http.HttpUtils;
+import cn.starchild.common.util.RedisUtils;
+import cn.starchild.common.util.WechatUtils;
 import cn.starchild.user.service.UserService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -61,5 +63,21 @@ public class TestController {
         Object jsonData = JSON.parse(data.getResultStr());
 
         return  ResData.ok(jsonData);
+    }
+
+    @RequestMapping("/testRedis")
+    @ResponseBody
+    public ResData testRedis() {
+        RedisUtils redisUtils = new RedisUtils();
+        WechatUtils wechatUtils = new WechatUtils();
+        boolean result = redisUtils.set("accessToken", wechatUtils.getAccessToken());
+        return  ResData.ok(result);
+    }
+
+    @RequestMapping("/getRedis")
+    @ResponseBody
+    public ResData getRedis() {
+        RedisUtils redisUtils = new RedisUtils();
+        return  ResData.ok(redisUtils.get("accessToken"));
     }
 }

@@ -34,6 +34,10 @@ public class TimerTask {
         }
     }
 
+    /**
+     * 10分钟执行一次监测是否有需要有需要发送的作业附件
+     */
+    @Scheduled(cron = "0/600 * * * * ?")
     public void sendEmail() {
         try {
             homeworkService.sendEmail();

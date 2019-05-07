@@ -58,7 +58,8 @@
     <select id="selectStudentList" resultType="java.util.Map" parameterType="string">
         select u.id,
                u.name,
-               u.serial_code
+               u.serial_code,
+               u.open_id
         from t_user u
                  join t_class_student cs on u.id = cs.student_id
         where cs.class_id = #{classId}

@@ -7,12 +7,14 @@ import cn.starchild.common.model.HomeworkSubmitModel;
 import cn.starchild.common.model.UserModel;
 import cn.starchild.common.util.FileUtils;
 import cn.starchild.common.util.UUIDUtils;
+import cn.starchild.common.util.WechatUtils;
 import cn.starchild.user.service.ClassService;
 import cn.starchild.user.service.ClassStudentService;
 import cn.starchild.user.service.HomeworkService;
 import cn.starchild.user.service.UserService;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.istack.internal.NotNull;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +41,9 @@ public class HomeworkController {
 
     @Autowired
     private ClassStudentService classStudentService;
+
+    private Logger logger = Logger.getLogger(this.getClass());
+
 
     /**
      * 发布作业
@@ -61,6 +67,7 @@ public class HomeworkController {
                            @NotNull String homeworkIntroduction,
                            @NotNull Integer sendByEmail,
                            @NotNull Integer fullScore,
+                           @NotNull String formId,
                            @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date deadline) throws IOException {
 
         if (teacherId == null) {
@@ -121,7 +128,39 @@ public class HomeworkController {
         homeWorkModel.setCreated(new Date());
         homeWorkModel.setModified(new Date());
 
-        boolean result = homeworkService.postHomework(homeWorkModel);
+
+
+        WechatUtils wechatUtils = new WechatUtils();
+
+        String accessToken = wechatUtils.getAccessToken().getString("access_token");
+
+        Map<String, Object> homeworkData = new HashMap<>();
+
+        Map<String, String> value1 = new HashMap<>();
+        value1.put("value", "className");
+        Map<String, String> value2 = new HashMap<>();
+        value2.put("value", "TEST");
+        Map<String, String> value3 = new HashMap<>();
+        value3.put("value", "desc");
+        Map<String, String> value4 = new HashMap<>();
+        value4.put("value", new Date().toString());
+
+        homeworkData.put("keyword1", value1);
+        homeworkData.put("keyword2", value2);
+        homeworkData.put("keyword3", value3);
+        homeworkData.put("keyword4", value4);
+
+        Map<String, Object> templateData = new HashMap<>();
+        templateData.put("touser", "okmLw0NEO3Ia11cd72CMLu3nCdG0");
+        templateData.put("template_id", "9h8OC1BeVXwLNuYiS8RYznXXB034R9VO4c_OMyBibaM");
+        templateData.put("form_id", formId);
+        templateData.put("data", homeworkData);
+
+
+        System.out.println(wechatUtils.sendTemplateMsg(accessToken, templateData));
+
+
+        boolean result = homeworkService.postHomework(homeWorkModel, formId);
         if (!result) {
             return ResData.error(Code.DATABASE_INSERT_FAIL, "发布作业失败!");
         }

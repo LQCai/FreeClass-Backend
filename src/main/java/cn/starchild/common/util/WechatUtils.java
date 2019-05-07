@@ -1,9 +1,15 @@
 package cn.starchild.common.util;
 
+import cn.starchild.common.cache.provider.SimpleCache;
 import cn.starchild.common.config.WeChatConfig;
+import cn.starchild.common.domain.WechatTemplate;
 import cn.starchild.common.http.HttpResponse;
 import cn.starchild.common.http.HttpUtils;
 import com.alibaba.fastjson.JSONObject;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class WechatUtils {
 
@@ -62,7 +68,51 @@ public class WechatUtils {
 
         System.out.println(data.getResultStr());
 
-        return  data.getResultStr();
+        return data.getResultStr();
     }
 
+    /**
+     * 获取accessToken
+     * @return
+     */
+    public JSONObject getAccessToken() {
+        WeChatConfig weChatConfig = new WeChatConfig();
+        String requestUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + weChatConfig.getAppId() +
+                "&secret=" + weChatConfig.getAppSecret();
+
+        HttpResponse data = HttpUtils.get(requestUrl, null);
+
+        return JSONObject.parseObject(data.getResultStr());
+    }
+
+    public JSONObject sendTemplateMsg(String accessToken, Map<String, Object> postData) {
+//        String accessToken = getAccessToken().getString("access_token");
+        String requestUrl = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=" + accessToken;
+
+        HttpResponse data = HttpUtils.postJson(requestUrl, new JSONObject(postData).toString());
+
+        return JSONObject.parseObject(data.getResultStr());
+    }
+
+
+    public static void main(String[] args) {
+        WechatUtils wechatUtils = new WechatUtils();
+
+        String accessToken = wechatUtils.getAccessToken().getString("access_token");
+
+        Map<String, String> homeworkData = new HashMap<>();
+        homeworkData.put("keyword1", "className");
+        homeworkData.put("keyword2", "TEST");
+        homeworkData.put("keyword3", "desc");
+        homeworkData.put("keyword4", new Date().toString());
+
+        Map<String, Object> templateData = new HashMap<>();
+        templateData.put("touser", "okmLw0NEO3Ia11cd72CMLu3nCdG0");
+        templateData.put("template_id", "9h8OC1BeVXwLNuYiS8RYznXXB034R9VO4c_OMyBibaM");
+        templateData.put("form_id", "wx20190101");
+        templateData.put("data", homeworkData);
+
+
+        System.out.println(wechatUtils.sendTemplateMsg(accessToken, templateData));
+    }
 }

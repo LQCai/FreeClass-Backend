@@ -33,9 +33,31 @@ public class HomeworkServiceImpl implements HomeworkService {
     private Logger logger = Logger.getLogger(this.getClass());
 
     @Override
-    public boolean postHomework(HomeWorkModel homeWorkModel) {
+    public boolean postHomework(HomeWorkModel homeWorkModel, String formId) {
+        Map<String, String> homeworkData = new HashMap<>();
+        homeworkData.put("keyword1", homeWorkModel.getName());
+        homeworkData.put("keyword2", "TEST");
+        homeworkData.put("keyword3", homeWorkModel.getIntroduction());
+        homeworkData.put("keyword4", homeWorkModel.getDeadline().toString());
+
+        List<Map<String, Object>> studentList = classStudentDao.selectStudentList(homeWorkModel.getClassId());
+
+        WechatUtils wechatUtils = new WechatUtils();
+        String accessToken = wechatUtils.getAccessToken().getString("access_token");
+
         try {
             homeWorkDao.insert(homeWorkModel);
+
+            for (Map<String, Object> student :
+                    studentList) {
+                Map<String, Object> templateData = new HashMap<>();
+                templateData.put("touser", student.get("open_id"));
+                templateData.put("template_id", "9h8OC1BeVXwLNuYiS8RYznXXB034R9VO4c_OMyBibaM");
+                templateData.put("form_id", formId);
+                templateData.put("data", homeworkData);
+
+                logger.info(wechatUtils.sendTemplateMsg(accessToken, templateData));;
+            }
         } catch (Exception e) {
             logger.error("插入作业失败：" + e.getMessage());
             return false;
@@ -211,7 +233,7 @@ public class HomeworkServiceImpl implements HomeworkService {
                 Date deadline = (Date) homeworkList.get(i).get("deadline");
 
                 // 如果截止时间与当前时间间隔超过10分钟则移除数据（没10分钟执行一次此函数）
-                if (deadline.after(now) && DateUtils.MinuteDifference(deadline, now) >= 10) {
+                if (deadline.before(now) && DateUtils.MinuteDifference(deadline, now) >= 10) {
                     homeworkList.remove(homeworkList.get(i));
                     break;
                 }
@@ -231,13 +253,14 @@ public class HomeworkServiceImpl implements HomeworkService {
             homeworkEmail.setModified(new Date());
 
             String annexDirUrl = "";
+            File annex;
             try {
                 annexDirUrl = FileUtils.homeworkSubmitCommonUrl + homework.get("class_id") + "/" + homework.get("id");
                 File annexDir = new File(annexDirUrl);
                 new FileZipUtils(new File(annexDirUrl, annexDir.getName() + ".zip")).zipFiles(annexDir);
 
                 // 发送邮件
-                File annex = new File(annexDirUrl + "/" + homework.get("id") + ".zip");
+                annex = new File(annexDirUrl + "/" + homework.get("id") + ".zip");
                 emailUtils.sendWithFile(homework.get("email").toString(), "作业提交通知", "大家的作业都在这啦!", annex);
 
             } catch (Exception e) {
@@ -247,6 +270,7 @@ public class HomeworkServiceImpl implements HomeworkService {
                 homeworkEmailDao.insert(homeworkEmail);
                 break;
             }
+            annex.delete();
 
             homeworkEmail.setStatus((byte) 1);
 
