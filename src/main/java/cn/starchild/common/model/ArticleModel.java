@@ -11,7 +11,7 @@ public class ArticleModel {
 
     private String content;
 
-    private Boolean status;
+    private byte status;
 
     private Date created;
 
@@ -43,11 +43,11 @@ public class ArticleModel {
         this.content = content == null ? null : content.trim();
     }
 
-    public Boolean getStatus() {
+    public byte getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(byte status) {
         this.status = status;
     }
 

@@ -1,11 +1,12 @@
-package cn.starchild.common.dao;
+package cn.starchild.user.service;
 
 import cn.starchild.common.model.ArticleModel;
-import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
 import java.util.Map;
 
-public interface ArticleDao extends Mapper<ArticleModel> {
+public interface ArticleService {
+    boolean postArticle(ArticleModel articleModel);
+
     List<Map<String, Object>> getArticleList();
 }
