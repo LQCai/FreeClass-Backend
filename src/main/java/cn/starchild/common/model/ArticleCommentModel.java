@@ -13,7 +13,7 @@ public class ArticleCommentModel {
 
     private String articleId;
 
-    private Boolean status;
+    private byte status;
 
     private Date created;
 
@@ -51,11 +51,11 @@ public class ArticleCommentModel {
         this.articleId = articleId == null ? null : articleId.trim();
     }
 
-    public Boolean getStatus() {
+    public byte getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(byte status) {
         this.status = status;
     }
 

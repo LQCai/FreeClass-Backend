@@ -22,6 +22,9 @@ public final class Code {
     public static final String CHECKED = "1032";//已签到
 
 
+    public static final String COLLECTED = "1041";//收藏
+
+
     // 请求错误
     public static final String PARAM_FORMAT_ERROR = "1201";//请求参数错误
 

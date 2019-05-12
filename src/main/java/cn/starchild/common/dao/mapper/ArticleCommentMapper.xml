@@ -1,16 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.starchild.common.dao.ArticleCommentDao">
-  <resultMap id="BaseResultMap" type="cn.starchild.common.model.ArticleCommentModel">
-    <id column="id" jdbcType="CHAR" property="id" />
-    <result column="comment" jdbcType="VARCHAR" property="comment" />
-    <result column="user_id" jdbcType="CHAR" property="userId" />
-    <result column="article_id" jdbcType="CHAR" property="articleId" />
-    <result column="status" jdbcType="BIT" property="status" />
-    <result column="created" jdbcType="TIMESTAMP" property="created" />
-    <result column="modified" jdbcType="TIMESTAMP" property="modified" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, comment, user_id, article_id, status, created, modified
-  </sql>
+    <resultMap id="BaseResultMap" type="cn.starchild.common.model.ArticleCommentModel">
+        <id column="id" jdbcType="CHAR" property="id"/>
+        <result column="comment" jdbcType="VARCHAR" property="comment"/>
+        <result column="user_id" jdbcType="CHAR" property="userId"/>
+        <result column="article_id" jdbcType="CHAR" property="articleId"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="created" jdbcType="TIMESTAMP" property="created"/>
+        <result column="modified" jdbcType="TIMESTAMP" property="modified"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, comment, user_id, article_id, status, created, modified
+    </sql>
+    <update id="deleteComment" parameterType="ArticleCommentModel">
+        update t_article_comment
+        <set>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="modified != null">
+                modified = #{modified,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <select id="selectCommentByIdAndUserId" resultMap="BaseResultMap" parameterType="ArticleCommentModel">
+        SELECT id
+        from t_article_comment
+        where id = #{id}
+          and user_id = #{userId}
+          and status != 2
+    </select>
+    <select id="selectCommentList" resultType="java.util.Map" parameterType="string">
+        select ac.id,
+               ac.comment,
+               ac.created,
+               u.name
+        from t_article_comment ac
+                 left join t_user u on u.id = ac.user_id
+        where article_id = #{articleId}
+          and ac.status != 2
+        order by ac.created asc
+    </select>
 </mapper>

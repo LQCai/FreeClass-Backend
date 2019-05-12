@@ -1,14 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.starchild.common.dao.ArticleCollectionDao">
-  <resultMap id="BaseResultMap" type="cn.starchild.common.model.ArticleCollectionModel">
-    <id column="id" jdbcType="CHAR" property="id" />
-    <result column="article_id" jdbcType="CHAR" property="articleId" />
-    <result column="user_id" jdbcType="CHAR" property="userId" />
-    <result column="created" jdbcType="TIMESTAMP" property="created" />
-    <result column="modified" jdbcType="TIMESTAMP" property="modified" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, article_id, user_id, created, modified
-  </sql>
+    <resultMap id="BaseResultMap" type="cn.starchild.common.model.ArticleCollectionModel">
+        <id column="id" jdbcType="CHAR" property="id"/>
+        <result column="article_id" jdbcType="CHAR" property="articleId"/>
+        <result column="user_id" jdbcType="CHAR" property="userId"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="created" jdbcType="TIMESTAMP" property="created"/>
+        <result column="modified" jdbcType="TIMESTAMP" property="modified"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, article_id, user_id, created, modified
+    </sql>
+    <update id="cancelCollect" parameterType="ArticleCollectionModel">
+        update t_article_collection
+        <set>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="modified != null">
+                modified = #{modified,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where article_id = #{articleId}
+        and user_id = #{userId}
+    </update>
+    <select id="selectCollectionByIdAndUserId" resultMap="BaseResultMap" parameterType="ArticleCollectionModel">
+        select id
+        from t_article_collection
+        where article_id = #{articleId}
+          and user_id = #{userId}
+          and status != 2
+    </select>
 </mapper>

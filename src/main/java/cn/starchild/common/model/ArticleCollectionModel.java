@@ -15,6 +15,8 @@ public class ArticleCollectionModel {
 
     private Date modified;
 
+    private byte status;
+
     public String getId() {
         return id;
     }
@@ -53,5 +55,13 @@ public class ArticleCollectionModel {
 
     public void setModified(Date modified) {
         this.modified = modified;
+    }
+
+    public byte getStatus() {
+        return status;
+    }
+
+    public void setStatus(byte status) {
+        this.status = status;
     }
 }
