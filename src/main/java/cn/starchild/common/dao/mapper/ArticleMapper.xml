@@ -23,11 +23,9 @@
                a.content,
                a.image_url_array,
                a.created,
-               count(ac.id)   article_collection_count,
-               count(acom.id) article_comment_count
+               u.name
         from t_article a
-                 left join t_article_collection ac on a.id = ac.article_id
-                 left join t_article_comment acom on a.id = acom.article_id
+                 left join t_user u on a.user_id = u.id
         where a.status != 2
         order by a.created desc
         limit #{index},10

@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/user/article")
@@ -25,39 +23,39 @@ public class ArticleController {
 
     /**
      * 发布动态
-     * @param images
-     * @param content
-     * @param userId
+     *
+     * @param jsonParams
      * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResData postAdd(@RequestParam("images") MultipartFile[] images,
-                           String content,
-                           String userId) {
-        if (userId == null) {
-            return ResData.error(Code.PARAM_FORMAT_ERROR, "userId为空");
-        }
+    public ResData postAdd(@RequestBody String jsonParams) {
+        JSONObject data = JSONObject.parseObject(jsonParams);
 
-        if (content == null) {
+        if (!data.containsKey("userId") || data.getString("userId").equals("")) {
+            return ResData.error(Code.PARAM_FORMAT_ERROR, "用户id不可为空");
+        }
+        if (!data.containsKey("content") || data.getString("content").equals("")) {
             return ResData.error(Code.PARAM_FORMAT_ERROR, "内容不可为空");
         }
+
+        String userId = data.getString("userId");
+        String content = data.getString("content");
+        String images = data.getString("images");
 
         boolean isUser = userService.validateUser(userId);
         if (!isUser) {
             return ResData.error(Code.DATA_NOT_FOUND, "用户不存在");
         }
 
-        List<String> imageUrls = new ArrayList<>();
-        for (MultipartFile image : images) {
-            String uploadName = image.getOriginalFilename().substring(0, image.getOriginalFilename().lastIndexOf("."));
-            String imageUrl = FileUtils.ARTICLE_IMAGE_DOMAIN + FileUtils.saveFile(image, 2, uploadName);
-            imageUrls.add(imageUrl);
-        }
-
         ArticleModel articleModel = new ArticleModel();
         articleModel.setUserId(userId);
         articleModel.setContent(content);
-        articleModel.setImageUrlArray(imageUrls.toString());
+
+        if (images != null) {
+            articleModel.setImageUrlArray(images);
+        } else {
+            articleModel.setImageUrlArray("");
+        }
 
         boolean result = articleService.postArticle(articleModel);
         if (!result) {
@@ -68,7 +66,27 @@ public class ArticleController {
     }
 
     /**
+     * 上传动态
+     *
+     * @param image
+     * @return
+     */
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    public ResData postUpload(MultipartFile image) {
+        String imageUrl = null;
+        try {
+            String uploadName = image.getOriginalFilename().substring(0, image.getOriginalFilename().lastIndexOf("."));
+            imageUrl = FileUtils.ARTICLE_IMAGE_DOMAIN + FileUtils.saveFile(image, 2, uploadName);
+        } catch (Exception e) {
+            return ResData.error("上传失败");
+        }
+
+        return ResData.ok(imageUrl);
+    }
+
+    /**
      * 动态列表
+     *
      * @return
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -78,6 +96,7 @@ public class ArticleController {
 
     /**
      * 获取动态详情
+     *
      * @param articleId
      * @return
      */
@@ -97,6 +116,7 @@ public class ArticleController {
 
     /**
      * 收藏动态
+     *
      * @param jsonParams
      * @return
      */
@@ -139,6 +159,7 @@ public class ArticleController {
 
     /**
      * 取消收藏
+     *
      * @param jsonParams
      * @return
      */
@@ -171,6 +192,7 @@ public class ArticleController {
 
     /**
      * 评论动态
+     *
      * @param jsonParams
      * @return
      */
@@ -212,6 +234,7 @@ public class ArticleController {
 
     /**
      * 删除评论
+     *
      * @param jsonParams
      * @return
      */

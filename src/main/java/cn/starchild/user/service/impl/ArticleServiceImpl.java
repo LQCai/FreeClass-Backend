@@ -53,11 +53,23 @@ public class ArticleServiceImpl implements ArticleService {
                 resultList) {
             Map<String, Object> article = new HashMap<>();
             article.put("id", result.get("id"));
+            article.put("name", result.get("name"));
             article.put("content", result.get("content"));
-            article.put("images", result.get("image_url_array"));
             article.put("createTime", result.get("created"));
-            article.put("collectionCount", result.get("article_collection_count"));
-            article.put("commentCount", result.get("article_comment_count"));
+
+            String imageString = result.get("image_url_array").toString();
+            if (!imageString.equals("")) {
+                imageString = imageString.substring(1, imageString.length() - 1);
+                String[] images = imageString.split(",");
+                List<String> imageUrls = new ArrayList<>();
+                for (String image : images) {
+                    image = image.substring(1, image.length() - 1);
+                    imageUrls.add(image);
+                }
+                article.put("images", imageUrls);
+            } else {
+                article.put("images", new Arrays[0]);
+            }
 
             articleList.add(article);
         }

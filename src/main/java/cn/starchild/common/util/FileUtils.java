@@ -12,8 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileUtils {
     public final static int FILE_TYPE_HOMEWORK_ANNEX = 0;
     public final static int FILE_TYPE_ANNOUNCEMENT_ANNEX = 1;
-    public final static int FILE_TYPE_ARTICLE_IMAGE = 3;
-    public final static int FILE_TYPE_FIRMWAVE = 2;
+    public final static int FILE_TYPE_ARTICLE_IMAGE = 2;
     public final static int FILE_TYPE_TOILET = 3;
     public final static int FILE_TYPE_SKIL_BAG = 4;
     public final static int FILE_TYPE_USER_OPINION = 5;
