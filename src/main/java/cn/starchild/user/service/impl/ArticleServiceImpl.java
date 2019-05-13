@@ -58,7 +58,7 @@ public class ArticleServiceImpl implements ArticleService {
             article.put("createTime", result.get("created"));
 
             String imageString = result.get("image_url_array").toString();
-            if (!imageString.equals("")) {
+            if (!imageString.equals("") && !imageString.equals("[]")) {
                 imageString = imageString.substring(1, imageString.length() - 1);
                 String[] images = imageString.split(",");
                 List<String> imageUrls = new ArrayList<>();
