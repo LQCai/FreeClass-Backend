@@ -90,8 +90,9 @@ public class ArticleController {
      * @return
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public ResData getList(String pageIndex) {
-        return ResData.ok(articleService.getArticleList(pageIndex));
+    public ResData getList(String pageIndex,
+                           String userId) {
+        return ResData.ok(articleService.getArticleList(pageIndex, userId));
     }
 
     /**

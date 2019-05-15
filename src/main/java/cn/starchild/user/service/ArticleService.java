@@ -8,7 +8,7 @@ import java.util.Map;
 public interface ArticleService {
     boolean postArticle(ArticleModel articleModel);
 
-    List<Map<String, Object>> getArticleList(String pageIndex);
+    List<Map<String, Object>> getArticleList(String pageIndex, String userId);
 
     boolean validateArticle(String articleId);
 

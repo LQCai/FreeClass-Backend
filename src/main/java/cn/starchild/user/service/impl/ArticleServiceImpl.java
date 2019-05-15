@@ -43,12 +43,24 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Map<String, Object>> getArticleList(String pageIndex) {
+    public List<Map<String, Object>> getArticleList(String pageIndex, String userId) {
         List<Map<String, Object>> articleList = new ArrayList<>();
 
         int index = Integer.parseInt(pageIndex) * 10;
 
         List<Map<String, Object>> resultList = articleDao.getArticleList(index);
+
+        // 获取评论列表
+        List<String> articleIdList = new ArrayList<>();
+        for (Map<String, Object> result :
+                resultList) {
+            articleIdList.add(result.get("id").toString());
+        }
+        List<Map<String, Object>> articleCommentList = articleDao.getArticleCommentList(articleIdList);
+
+        // 收藏列表
+        List<Map<String, Object>> collectList = articleDao.getArticleCollectList(articleIdList);
+
         for (Map<String, Object> result :
                 resultList) {
             Map<String, Object> article = new HashMap<>();
@@ -69,6 +81,31 @@ public class ArticleServiceImpl implements ArticleService {
                 article.put("images", imageUrls);
             } else {
                 article.put("images", new Arrays[0]);
+            }
+
+            // 获取评论列表
+            List<Map<String, Object>> commentList = new ArrayList<>();
+            for (Map<String, Object> comment : articleCommentList) {
+                if (comment.get("article_id").toString().equals(result.get("id").toString())) {
+                    Map<String, Object> commentInfo = new HashMap<>();
+
+                    commentInfo.put("id", comment.get("id"));
+                    commentInfo.put("comment", comment.get("comment"));
+                    commentInfo.put("creator", comment.get("name"));
+                    commentInfo.put("createTime", comment.get("created"));
+                    commentList.add(commentInfo);
+                }
+            }
+            article.put("commentList", commentList);
+            article.put("star", 2);
+
+            // 获取是否收藏信息
+            for (Map<String, Object> collect : collectList) {
+                if (collect.get("article_id").toString().equals(result.get("id").toString())) {
+                    if (collect.get("user_id").toString().equals(userId) && collect.get("status").toString().equals("1")) {
+                        article.put("star", 1);
+                    }
+                }
             }
 
             articleList.add(article);

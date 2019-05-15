@@ -33,7 +33,8 @@
     <select id="selectArticleById" resultType="cn.starchild.common.model.ArticleModel" parameterType="string">
         select id
         from t_article
-        where status != 2
+        where id = #{articleId}
+          and status != 2
     </select>
     <select id="selectArticleDetail" resultType="java.util.Map" parameterType="string">
         select a.id,
@@ -46,5 +47,34 @@
                  left join t_article_collection ac on a.id = ac.article_id
                  left join t_article_comment acom on a.id = acom.article_id
         where a.id = #{articleId}
+    </select>
+    <select id="getArticleCommentList" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        ac.id,
+        ac.comment,
+        u.name,
+        ac.created,
+        ac.article_id
+        from t_article_comment ac
+        join t_article a on a.id = ac.article_id
+        left join t_user u on u.id = ac.user_id
+        where ac.article_id in
+        <foreach collection="articleIdList" item="articleId" index="index" open="(" separator="," close=")">
+            #{articleId}
+        </foreach>
+        order by ac.created asc
+    </select>
+    <select id="getArticleCollectList" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        id,
+        created,
+        user_id,
+        article_id,
+        status*1 status
+        from t_article_collection
+        where article_id in
+        <foreach collection="articleIdList" item="articleId" index="index" open="(" separator="," close=")">
+            #{articleId}
+        </foreach>
     </select>
 </mapper>
