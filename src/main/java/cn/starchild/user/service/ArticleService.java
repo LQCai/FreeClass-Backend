@@ -25,4 +25,6 @@ public interface ArticleService {
     boolean deleteComment(String articleCommentId);
 
     Map<String, Object> getArticleInfo(String articleId);
+
+    List<Map<String, Object>> getCollectList(String userId);
 }

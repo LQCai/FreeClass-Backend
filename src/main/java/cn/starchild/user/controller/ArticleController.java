@@ -265,4 +265,14 @@ public class ArticleController {
 
         return ResData.ok();
     }
+
+    /**
+     * 获取收藏列表
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/collectList", method = RequestMethod.GET)
+    public ResData getCollectList(String userId) {
+        return ResData.ok(articleService.getCollectList(userId));
+    }
 }

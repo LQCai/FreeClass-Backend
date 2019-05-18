@@ -32,4 +32,18 @@
           and user_id = #{userId}
           and status != 2
     </select>
+    <select id="getMyCollectList" resultType="java.util.Map" parameterType="string">
+        select a.id,
+               a.content,
+               a.created,
+               a.image_url_array,
+               u.name
+        from t_article_collection ac
+                 join t_article a on a.id = ac.article_id
+                 left join t_user u on a.user_id = u.id
+        where ac.user_id = #{userId}
+          and ac.status = 1
+          and a.status = 1
+        order by ac.created desc
+    </select>
 </mapper>

@@ -244,4 +244,68 @@ public class ArticleServiceImpl implements ArticleService {
 
         return articleInfo;
     }
+
+    @Override
+    public List<Map<String, Object>> getCollectList(String userId) {
+        List<Map<String, Object>> collectList = new ArrayList<>();
+
+        List<Map<String, Object>> resultList = articleCollectionDao.getMyCollectList(userId);
+
+        // 获取评论列表
+        List<String> articleIdList = new ArrayList<>();
+        for (Map<String, Object> result :
+                resultList) {
+            articleIdList.add(result.get("id").toString());
+        }
+
+        if (articleIdList.size() == 0) {
+            return new ArrayList<>();
+        }
+
+        List<Map<String, Object>> articleCommentList = articleDao.getArticleCommentList(articleIdList);
+
+
+        for (Map<String, Object> result :
+                resultList) {
+            Map<String, Object> article = new HashMap<>();
+            article.put("id", result.get("id"));
+            article.put("name", result.get("name"));
+            article.put("content", result.get("content"));
+            article.put("createTime", result.get("created"));
+
+            String imageString = result.get("image_url_array").toString();
+            if (!imageString.equals("") && !imageString.equals("[]")) {
+                imageString = imageString.substring(1, imageString.length() - 1);
+                String[] images = imageString.split(",");
+                List<String> imageUrls = new ArrayList<>();
+                for (String image : images) {
+                    image = image.substring(1, image.length() - 1);
+                    imageUrls.add(image);
+                }
+                article.put("images", imageUrls);
+            } else {
+                article.put("images", new Arrays[0]);
+            }
+
+            // 获取评论列表
+            List<Map<String, Object>> commentList = new ArrayList<>();
+            for (Map<String, Object> comment : articleCommentList) {
+                if (comment.get("article_id").toString().equals(result.get("id").toString())) {
+                    Map<String, Object> commentInfo = new HashMap<>();
+
+                    commentInfo.put("id", comment.get("id"));
+                    commentInfo.put("comment", comment.get("comment"));
+                    commentInfo.put("creator", comment.get("name"));
+                    commentInfo.put("createTime", comment.get("created"));
+                    commentList.add(commentInfo);
+                }
+            }
+            article.put("commentList", commentList);
+
+
+            collectList.add(article);
+        }
+
+        return collectList;
+    }
 }
