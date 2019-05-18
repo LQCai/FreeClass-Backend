@@ -207,7 +207,7 @@ public class ArticleController {
         if (!joinData.containsKey("articleId")) {
             return ResData.error(Code.PARAM_FORMAT_ERROR, "动态id不可为空");
         }
-        if (!joinData.containsKey("content")) {
+        if (!joinData.containsKey("content") || joinData.getString("content").equals("")) {
             return ResData.error(Code.PARAM_FORMAT_ERROR, "评论内容不可为空");
         }
 

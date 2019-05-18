@@ -67,6 +67,7 @@
         from t_homework
         where class_id = #{classId}
           and status != 2
+        order by created desc
     </select>
     <select id="selectHomework" resultMap="BaseResultMap" parameterType="string">
         select id,
