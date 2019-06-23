@@ -60,5 +60,6 @@
         from t_announcement
         where class_id = #{classId}
           and status != 2
+        order by created desc
     </select>
 </mapper>

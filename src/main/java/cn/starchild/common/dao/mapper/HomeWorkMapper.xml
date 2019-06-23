@@ -67,13 +67,34 @@
         from t_homework
         where class_id = #{classId}
           and status != 2
+        order by created desc
     </select>
     <select id="selectHomework" resultMap="BaseResultMap" parameterType="string">
         select id,
-               name
+               name,
+               deadline
         from t_homework
         where id = #{homeworkId}
           and status != 2
+    </select>
+    <select id="selectNearDeadlineHomeworkList" resultType="java.util.Map">
+        select h.id,
+               h.name,
+               h.annex_url,
+               h.deadline,
+               h.created,
+               h.class_id,
+               c.name class_name,
+               c.teacher_id,
+               u.name teacher_name,
+               u.email
+        from t_homework h
+                 join t_class c on c.id = class_id
+                 join t_user u on u.id = c.teacher_id
+        where 1 > datediff(now(), h.deadline)
+          and h.status = 1
+          and c.status = 1
+          and u.status = 1
     </select>
 
 </mapper>

@@ -9,9 +9,9 @@ public class HelpCategoryModel {
 
     private String name;
 
-    private Boolean status;
+    private byte status;
 
-    private Boolean sort;
+    private byte sort;
 
     private String creator;
 
@@ -37,19 +37,19 @@ public class HelpCategoryModel {
         this.name = name == null ? null : name.trim();
     }
 
-    public Boolean getStatus() {
+    public byte getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(byte status) {
         this.status = status;
     }
 
-    public Boolean getSort() {
+    public byte getSort() {
         return sort;
     }
 
-    public void setSort(Boolean sort) {
+    public void setSort(byte sort) {
         this.sort = sort;
     }
 

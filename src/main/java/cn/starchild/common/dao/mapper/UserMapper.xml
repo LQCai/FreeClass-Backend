@@ -75,6 +75,16 @@
         where id = #{id}
           and status != 2
     </select>
+    <select id="getUserList" resultType="java.util.Map">
+        select id,
+               name,
+               open_id,
+               status*1 status,
+               created,
+               email,
+               serial_code
+        from t_user
+    </select>
 
 
 </mapper>

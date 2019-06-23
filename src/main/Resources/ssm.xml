@@ -14,7 +14,7 @@
                         http://www.springframework.org/schema/tx/spring-tx.xsd
                         http://www.springframework.org/schema/task
                         http://www.springframework.org/schema/task/spring-task-3.2.xsd
-                        ">
+                        http://www.springframework.org/schema/beans/spring-beans.xsd">
     <!--配置Handler，也就是控制器，使用组件扫描-->
     <context:component-scan base-package="cn.starchild"/>
     <!--使用mvc:annotation-driven会加载很多的参数绑定方法 包括JSON解析-->
@@ -63,6 +63,59 @@
         <property name="mapperLocations" value="classpath:/cn/starchild/*/dao/mapper/*.xml"/>
         <property name="typeAliasesPackage" value="cn.starchild.common.model"/>
         <property name="typeHandlersPackage" value="cn.starchild.common.handler"/>
+    </bean>
+
+    <!--引入Redis配置文件-->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:redis.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- jedis 连接池配置 -->
+    <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxIdle" value="${maxIdle}"/>
+        <property name="maxWaitMillis" value="${maxWait}"/>
+        <property name="testOnBorrow" value='true'/>
+    </bean>
+    <!-- redis连接工厂 -->
+    <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="poolConfig" ref="poolConfig"/>
+        <property name="port" value="6379"/>
+        <property name="hostName" value="127.0.0.1"/>
+        <property name="password" value="Aa809795."/>
+        <property name="timeout" value="100000"/>
+    </bean>
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="keySerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+        </property>
+        <property name="valueSerializer">
+            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
+        </property>
+    </bean>
+    <!-- 缓存拦截器配置 -->
+    <bean id="methodCacheInterceptor" class="cn.starchild.common.filter.MethodCacheInterceptor">
+        <property name="redisUtil" ref="redisUtil"/>
+        <property name="defaultCacheExpireTime" value="3600"/>
+        <!-- 禁用缓存的类名列表 -->
+        <property name="targetNamesList">
+            <list>
+                <value></value>
+            </list>
+        </property>
+        <!-- 禁用缓存的方法名列表 -->
+        <property name="methodNamesList">
+            <list>
+                <value></value>
+            </list>
+        </property>
+    </bean>
+    <bean id="redisUtil" class="cn.starchild.common.util.RedisUtils">
+        <property name="redisTemplate" ref="redisTemplate"/>
     </bean>
 
     <!--&lt;!&ndash; DAO接口所在包名，Spring会自动查找其下的类 &ndash;&gt;-->

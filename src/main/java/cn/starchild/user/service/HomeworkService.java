@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface HomeworkService {
-    boolean postHomework(HomeWorkModel homeWorkModel);
+    boolean postHomework(HomeWorkModel homeWorkModel, String formId);
 
     boolean updateHomework(HomeWorkModel homeWorkModel);
 
@@ -26,4 +26,6 @@ public interface HomeworkService {
     boolean validateSubmitted(String studentId, String homeworkId);
 
     Map<String, Object> getSubmittedInfo(String studentId, String homeworkId);
+
+    void sendEmail();
 }

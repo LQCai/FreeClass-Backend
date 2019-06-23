@@ -8,9 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.sql.Time;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -99,5 +97,28 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    @Override
+    public List<Map<String, Object>> getUserList() {
+        List<Map<String, Object>> resultList = userDao.getUserList();
+
+        List<Map<String, Object>> userList = new ArrayList<>();
+
+        for (Map<String, Object> result:
+                resultList) {
+            Map<String, Object> user = new HashMap<>();
+
+            user.put("key", result.get("id"));
+            user.put("name", result.get("name"));
+            user.put("serialCode", result.get("serial_code"));
+            user.put("openId", result.get("open_id"));
+            user.put("email", result.get("email"));
+            user.put("status", result.get("status"));
+            user.put("createTime", result.get("created"));
+
+            userList.add(user);
+        }
+
+        return userList;
+    }
 
 }

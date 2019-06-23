@@ -23,4 +23,6 @@ public interface UserService {
     boolean validateRegister(String openId);
 
     boolean validateUser(String teacherId);
+
+    List<Map<String, Object>> getUserList();
 }
